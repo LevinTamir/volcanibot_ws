@@ -11,7 +11,7 @@ def generate_launch_description():
     urdf_path = os.path.join(
         FindPackageShare("volcanibot_description").find("volcanibot_description"),
         "urdf",
-        "volcanibot_description.urdf",
+        "volcanibot_description.xacro",
     )
 
     rviz_config_path = os.path.join(

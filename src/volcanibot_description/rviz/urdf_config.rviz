@@ -63,21 +63,24 @@ Visualization Manager:
           Value: true
         link_FR:
           Value: true
+        world:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        base_link:
-          link_BL:
-            {}
-          link_BR:
-            {}
-          link_FL:
-            {}
-          link_FR:
-            {}
+        world:
+          base_link:
+            link_BL:
+              {}
+            link_BR:
+              {}
+            link_FL:
+              {}
+            link_FR:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -123,6 +126,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
       Mass Properties:
         Inertia: false
         Mass: false
@@ -134,7 +141,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: base_link
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
@@ -192,10 +199,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.23539851605892181
+      Pitch: 0.05539853125810623
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.5703995227813721
+      Yaw: 0.3003997802734375
     Saved: ~
 Window Geometry:
   Displays:
@@ -214,4 +221,4 @@ Window Geometry:
     collapsed: false
   Width: 1200
   X: 379
-  Y: 39
+  Y: 124

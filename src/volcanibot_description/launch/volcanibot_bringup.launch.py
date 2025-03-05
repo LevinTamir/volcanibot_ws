@@ -47,7 +47,7 @@ def generate_launch_description():
         executable="create",
         arguments=[
             "-name",
-            "pendulum",
+            "volcanibot",
             "-x",
             "1",
             "-y",

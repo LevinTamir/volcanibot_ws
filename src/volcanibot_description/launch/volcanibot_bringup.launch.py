@@ -1,86 +1,142 @@
 import os
-from pathlib import Path
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch_ros.actions import Node
-from launch.substitutions import PathJoinSubstitution, Command
-from launch_ros.substitutions import FindPackageShare
-from launch_ros.parameter_descriptions import ParameterValue
+from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
-    volcanibot_description = get_package_share_directory("volcanibot_description")
 
-    # Set Gazebo resource path
-    gazebo_resource_path = SetEnvironmentVariable(
-        name="GZ_SIM_RESOURCE_PATH",
-        value=[str(Path(volcanibot_description).parent.resolve())],
+    pkg_volcanibot_description = get_package_share_directory("volcanibot_description")
+
+    gazebo_models_path, ignore_last_dir = os.path.split(pkg_volcanibot_description)
+    if "GZ_SIM_RESOURCE_PATH" not in os.environ:
+        os.environ["GZ_SIM_RESOURCE_PATH"] = gazebo_models_path
+    else:
+        os.environ["GZ_SIM_RESOURCE_PATH"] += os.pathsep + gazebo_models_path
+
+    rviz_launch_arg = DeclareLaunchArgument(
+        "rviz", default_value="true", description="Open RViz."
     )
 
-    # Robot description
-    robot_description = ParameterValue(
-        Command(
-            [
-                "xacro ",
-                os.path.join(
-                    volcanibot_description, "urdf", "volcanibot_description.xacro"
-                ),
-            ]
+    world_arg = DeclareLaunchArgument(
+        "farm",
+        default_value="farm.sdf",
+        description="Name of the Gazebo world file to load",
+    )
+
+    model_arg = DeclareLaunchArgument(
+        "model",
+        default_value="volcanibot_description.xacro",
+        description="Name of the URDF description to load",
+    )
+
+    # Define the path to your URDF or Xacro file
+    urdf_file_path = PathJoinSubstitution(
+        [
+            pkg_volcanibot_description,  # Replace with your package name
+            "urdf",
+            LaunchConfiguration("model"),  # Replace with your URDF or Xacro file
+        ]
+    )
+
+    world_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_volcanibot_description, "launch", "world.launch.py"),
         ),
-        value_type=str,
+        launch_arguments={
+            "farm": LaunchConfiguration("farm"),
+        }.items(),
     )
 
-    # Robot State Publisher
-    robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        name="robot_state_publisher",
-        output="screen",
-        parameters=[{"robot_description": robot_description, "use_sim_time": True}],
+    # Launch rviz
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        arguments=[
+            "-d",
+            os.path.join(pkg_volcanibot_description, "rviz", "urdf_config.rviz"),
+        ],
+        condition=IfCondition(LaunchConfiguration("rviz")),
+        parameters=[
+            {"use_sim_time": True},
+        ],
     )
 
-    # Spawn robot in Gazebo Ignition
-    spawn_node = Node(
+    # Spawn the URDF model using the `/world/<world_name>/create` service
+    spawn_urdf_node = Node(
         package="ros_gz_sim",
         executable="create",
         arguments=[
             "-name",
             "volcanibot",
-            "-x",
-            "1",
-            "-y",
-            "1",
-            "-z",
-            "0",
-            "-r",
-            "0",
-            "-p",
-            "0",
-            "-Y",
-            "3.14",
             "-topic",
-            "/robot_description",
+            "robot_description",
+            "-x",
+            "2.0",
+            "-y",
+            "2.0",
+            "-z",
+            "0.0",
+            "-Y",
+            "1.57",  # Initial spawn position
         ],
         output="screen",
+        parameters=[
+            {"use_sim_time": True},
+        ],
     )
 
-    # Launch Gazebo Ignition
-    ignition_gazebo_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [FindPackageShare("ros_gz_sim"), "launch", "gz_sim.launch.py"]
-            )
-        ),
-        launch_arguments=[("gz_args", ["-r -v 4 empty.sdf"])],
+    robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        name="robot_state_publisher",
+        output="screen",
+        parameters=[
+            {
+                "robot_description": Command(["xacro", " ", urdf_file_path]),
+                "use_sim_time": True,
+            },
+        ],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
     )
 
-    return LaunchDescription(
-        [
-            gazebo_resource_path,
-            robot_state_publisher_node,
-            spawn_node,
-            ignition_gazebo_node,
-        ]
+    # Node to bridge messages like /cmd_vel and /odom
+    gz_bridge_node = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+            "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
+            "/odom@nav_msgs/msg/Odometry@gz.msgs.Odometry",
+            "/joint_states@sensor_msgs/msg/JointState@gz.msgs.Model",
+            "/tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V",
+        ],
+        output="screen",
+        parameters=[
+            {"use_sim_time": True},
+        ],
     )
+
+    # trajectory_node = Node(
+    #     package='mogi_trajectory_server',
+    #     executable='mogi_trajectory_server',
+    #     name='mogi_trajectory_server',
+    # )
+
+    launchDescriptionObject = LaunchDescription()
+
+    launchDescriptionObject.add_action(rviz_launch_arg)
+    launchDescriptionObject.add_action(world_arg)
+    launchDescriptionObject.add_action(model_arg)
+    launchDescriptionObject.add_action(world_launch)
+    launchDescriptionObject.add_action(rviz_node)
+    launchDescriptionObject.add_action(spawn_urdf_node)
+    launchDescriptionObject.add_action(robot_state_publisher_node)
+    launchDescriptionObject.add_action(gz_bridge_node)
+    # launchDescriptionObject.add_action(trajectory_node)
+
+    return launchDescriptionObject

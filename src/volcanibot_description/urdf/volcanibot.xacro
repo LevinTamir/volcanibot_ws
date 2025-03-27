@@ -3,7 +3,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="volcanibot">
 
   <!-- Gazebo plugins -->
-  <!-- <xacro:include filename="$(find volcanibot_description)/urdf/volcanibot.gazebo.xacro" /> -->
+  <xacro:include filename="$(find volcanibot_description)/urdf/volcanibot_gazebo.xacro" />
 
   <!-- colors -->
   <xacro:include filename="$(find volcanibot_description)/urdf/materials.xacro" />

@@ -1,12 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<robot name="volcanibot_description" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="volcanibot">
+
+  <!-- Gazebo plugins -->
+  <!-- <xacro:include filename="$(find volcanibot_description)/urdf/volcanibot.gazebo.xacro" /> -->
+
+  <!-- colors -->
+  <xacro:include filename="$(find volcanibot_description)/urdf/materials.xacro" />
 
   <!-- Define the world link -->
-  <link name="world"/>
+  <link name="base_footprint"/>
 
   <!-- Define a joint connecting world to base_link -->
-  <joint name="world_to_base_link" type="fixed">
-    <parent link="world"/>
+  <joint name="base_footprint_to_base_link" type="fixed">
+    <parent link="base_footprint"/>
     <child link="base_link"/>
     <origin xyz="0 0 0.9" rpy="0 0 0"/>
   </joint>
@@ -34,7 +41,7 @@
     </collision>
   </link>
 
-  <link name="link_BR">
+  <link name="rear_right_wheel_link">
     <inertial>
       <origin xyz="-0.002464 7.7174E-12 -1.0734E-12" rpy="0 0 0" />
       <mass value="19.568" />
@@ -43,7 +50,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/link_BR.STL" />
+        <mesh filename="package://volcanibot_description/meshes/rear_right_wheel_link.STL" />
       </geometry>
       <material name="">
         <color rgba="0.79216 0.81961 0.93333 1" />
@@ -52,19 +59,19 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/link_BR.STL" />
+        <mesh filename="package://volcanibot_description/meshes/rear_right_wheel_link.STL" />
       </geometry>
     </collision>
   </link>
 
-  <joint name="joint_BR" type="continuous">
+  <joint name="rear_right_wheel_joint" type="continuous">
     <origin xyz="0.9705 -0.5 -0.66" rpy="0 0 0" />
     <parent link="base_link" />
-    <child link="link_BR" />
+    <child link="rear_right_wheel_link" />
     <axis xyz="1 0 0" />
   </joint>
 
-  <link name="link_BL">
+  <link name="rear_left_wheel_link">
     <inertial>
       <origin xyz="0.002464 -4.863E-12 6.0718E-12" rpy="0 0 0" />
       <mass value="19.568" />
@@ -73,7 +80,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/link_BL.STL" />
+        <mesh filename="package://volcanibot_description/meshes/rear_left_wheel_link.STL" />
       </geometry>
       <material name="">
         <color rgba="0.79216 0.81961 0.93333 1" />
@@ -82,19 +89,19 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/link_BL.STL" />
+        <mesh filename="package://volcanibot_description/meshes/rear_left_wheel_link.STL" />
       </geometry>
     </collision>
   </link>
 
-  <joint name="joint_BL" type="continuous">
+  <joint name="rear_left_wheel_joint" type="continuous">
     <origin xyz="-0.9705 -0.5 -0.66" rpy="0 0 0" />
     <parent link="base_link" />
-    <child link="link_BL" />
+    <child link="rear_left_wheel_link" />
     <axis xyz="1 0 0" />
   </joint>
 
-  <link name="link_FL">
+  <link name="front_left_wheel_link">
     <inertial>
       <origin xyz="0.002464 3.0038E-12 7.1789E-12" rpy="0 0 0" />
       <mass value="19.568" />
@@ -103,7 +110,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/link_FL.STL" />
+        <mesh filename="package://volcanibot_description/meshes/front_left_wheel_link.STL" />
       </geometry>
       <material name="">
         <color rgba="0.79216 0.81961 0.93333 1" />
@@ -112,19 +119,19 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/link_FL.STL" />
+        <mesh filename="package://volcanibot_description/meshes/front_left_wheel_link.STL" />
       </geometry>
     </collision>
   </link>
 
-  <joint name="joint_FL" type="continuous">
+  <joint name="front_left_wheel_joint" type="continuous">
     <origin xyz="-0.9705 0.5 -0.66" rpy="0 0 0" />
     <parent link="base_link" />
-    <child link="link_FL" />
+    <child link="front_left_wheel_link" />
     <axis xyz="1 0 0" />
   </joint>
 
-  <link name="link_FR">
+  <link name="front_right_wheel_link">
     <inertial>
       <origin xyz="-0.002464 7.518E-12 2.0106E-12" rpy="0 0 0" />
       <mass value="19.568" />
@@ -133,7 +140,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/link_FR.STL" />
+        <mesh filename="package://volcanibot_description/meshes/front_right_wheel_link.STL" />
       </geometry>
       <material name="">
         <color rgba="0.79216 0.81961 0.93333 1" />
@@ -142,15 +149,15 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/link_FR.STL" />
+        <mesh filename="package://volcanibot_description/meshes/front_right_wheel_link.STL" />
       </geometry>
     </collision>
   </link>
 
-  <joint name="joint_FR" type="continuous">
+  <joint name="front_right_wheel_joint" type="continuous">
     <origin xyz="0.9705 0.5 -0.66" rpy="0 0 0" />
     <parent link="base_link" />
-    <child link="link_FR" />
+    <child link="front_right_wheel_link" />
     <axis xyz="1 0 0" />
   </joint>
 

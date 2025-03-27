@@ -1,26 +1,26 @@
 import os
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
 from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
-    urdf_path = os.path.join(
-        FindPackageShare("volcanibot_description").find("volcanibot_description"),
-        "urdf",
-        "volcanibot_description.xacro",
+    volcanibot_description_dir = get_package_share_directory("volcanibot_description")
+
+    model_arg = DeclareLaunchArgument(
+        name="model",
+        default_value=os.path.join(
+            volcanibot_description_dir, "urdf", "volcanibot.xacro"
+        ),
+        description="Absolute path to robot urdf file",
     )
 
-    rviz_config_path = os.path.join(
-        FindPackageShare("volcanibot_description").find("volcanibot_description"),
-        "rviz",
-        "urdf_config.rviz",
+    robot_description = ParameterValue(
+        Command(["xacro ", LaunchConfiguration("model")]), value_type=str
     )
-
-    robot_description = ParameterValue(Command(["xacro ", urdf_path]), value_type=str)
 
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
@@ -32,14 +32,22 @@ def generate_launch_description():
         package="joint_state_publisher_gui", executable="joint_state_publisher_gui"
     )
 
-    rviz2_node = Node(
-        package="rviz2", executable="rviz2", arguments=["-d", rviz_config_path]
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="screen",
+        arguments=[
+            "-d",
+            os.path.join(volcanibot_description_dir, "rviz", "display.rviz"),
+        ],
     )
 
     return LaunchDescription(
         [
-            robot_state_publisher_node,
+            model_arg,
             joint_state_publisher_gui_node,
-            rviz2_node,
+            robot_state_publisher_node,
+            rviz_node,
         ]
     )

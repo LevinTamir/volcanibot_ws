@@ -33,19 +33,14 @@ def generate_launch_description():
     )
 
     # Robot description
-    robot_description = ParameterValue(
-        Command(
-            [
-                "xacro ",
-                os.path.join(
-                    volcanibot_description, "urdf", "volcanibot_description.xacro"
-                ),
-            ]
-        ),
-        value_type=str,
+    robot_description = Command(
+        [
+            "xacro ",
+            os.path.join(volcanibot_description, "urdf", "volcanibot.xacro"),
+        ]
     )
 
-    # Decalre path to .worlds files
+    # Declare path to .worlds files
     world_arg = DeclareLaunchArgument(
         "farm",
         default_value="farm.sdf",
@@ -77,9 +72,13 @@ def generate_launch_description():
         }.items(),
     )
 
-    # Launch rviz
-    rviz2_node = Node(
-        package="rviz2", executable="rviz2", arguments=["-d", rviz_config_path]
+    # Robot State Publisher
+    robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        name="robot_state_publisher",
+        output="screen",
+        parameters=[{"robot_description": robot_description}],
     )
 
     # Spawn robot in Gazebo Ignition
@@ -107,37 +106,21 @@ def generate_launch_description():
         output="screen",
     )
 
-    # Robot State Publisher
-    robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        name="robot_state_publisher",
-        output="screen",
-        parameters=[{"robot_description": robot_description, "use_sim_time": True}],
-    )
-
     # Node to bridge messages like /cmd_vel and /odom
     gz_bridge_node = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=[
-            "/clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock",
             "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
             "/odom@nav_msgs/msg/Odometry@gz.msgs.Odometry",
-            "/joint_states@sensor_msgs/msg/JointState@gz.msgs.Model",
-            "/tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V",
         ],
         output="screen",
-        parameters=[
-            {"use_sim_time": True},
-        ],
     )
 
-    # trajectory_node = Node(
-    #     package='mogi_trajectory_server',
-    #     executable='mogi_trajectory_server',
-    #     name='mogi_trajectory_server',
-    # )
+    # Launch rviz
+    rviz2_node = Node(
+        package="rviz2", executable="rviz2", arguments=["-d", rviz_config_path]
+    )
 
     launchDescriptionObject = LaunchDescription()
 

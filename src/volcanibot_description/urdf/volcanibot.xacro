@@ -2,10 +2,15 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="volcanibot">
 
-  <!-- Gazebo plugins -->
+  <xacro:arg name="is_ignition" default="true" />
+
+  <!-- Include Gazebo plugins -->
   <xacro:include filename="$(find volcanibot_description)/urdf/volcanibot_gazebo.xacro" />
 
-  <!-- colors -->
+  <!-- Include ROS 2 Control plugins -->
+  <xacro:include filename="$(find volcanibot_description)/urdf/volcanibot_ros2_control.xacro" />
+
+  <!-- Colors -->
   <xacro:include filename="$(find volcanibot_description)/urdf/materials.xacro" />
 
   <!-- Define the world link -->

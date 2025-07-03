@@ -64,7 +64,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/rear_right_wheel_link.STL" />
+        <sphere radius="0.26"/>
       </geometry>
     </collision>
   </link>
@@ -94,7 +94,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/rear_left_wheel_link.STL" />
+        <sphere radius="0.26"/>
       </geometry>
     </collision>
   </link>
@@ -124,7 +124,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/front_left_wheel_link.STL" />
+        <sphere radius="0.26"/>
       </geometry>
     </collision>
   </link>
@@ -154,7 +154,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://volcanibot_description/meshes/front_right_wheel_link.STL" />
+        <sphere radius="0.26"/>
       </geometry>
     </collision>
   </link>

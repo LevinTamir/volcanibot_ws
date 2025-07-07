@@ -25,18 +25,25 @@
 
   <link name="base_link">
     <inertial>
-      <origin xyz="-0.000308432013766069 0.000824745609093291 -0.348795097773964" rpy="0 0 0" />
-      <mass value="98.2206347258375" />
-      <inertia ixx="8.02628327825717" ixy="0.00024350529649604" ixz="2.67248679783338E-13" iyy="8.04861649065601" iyz="-1.25831921649467E-12" izz="14.6198876609904" />
+      <origin
+        xyz="0.000824745609091071 0.000308432013766069 -0.348795097773962"
+        rpy="0 0 0" />
+      <mass
+        value="98.2206347258376" />
+      <inertia
+        ixx="8.04861649065602"
+        ixy="-0.000243505296496384"
+        ixz="-1.23536316318022E-12"
+        iyy="8.02628327825716"
+        iyz="-2.67210376330799E-13"
+        izz="14.6198876609904" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://volcanibot_description/meshes/base_link.STL" />
       </geometry>
-      <material name="">
-        <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
-      </material>
+      <material name="red"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -48,18 +55,25 @@
 
   <link name="rear_right_wheel_link">
     <inertial>
-      <origin xyz="-0.002464 7.7174E-12 -1.0734E-12" rpy="0 0 0" />
-      <mass value="19.568" />
-      <inertia ixx="0.76858" ixy="-1.5351E-12" ixz="4.2467E-13" iyy="0.41546" iyz="-7.8249E-13" izz="0.41546" />
+      <origin
+        xyz="7.66942065411058E-12 0.00246396479612621 -1.02851061001275E-12"
+        rpy="0 0 0" />
+      <mass
+        value="19.5682646733117" />
+      <inertia
+        ixx="0.41545797245674"
+        ixy="1.5364211917504E-12"
+        ixz="-7.82486812116746E-13"
+        iyy="0.768576636338704"
+        iyz="-4.25891260535319E-13"
+        izz="0.415457972457063" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://volcanibot_description/meshes/rear_right_wheel_link.STL" />
       </geometry>
-      <material name="">
-        <color rgba="0.79216 0.81961 0.93333 1" />
-      </material>
+      <material name="black"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -70,26 +84,38 @@
   </link>
 
   <joint name="rear_right_wheel_joint" type="continuous">
-    <origin xyz="0.9705 -0.5 -0.66" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="rear_right_wheel_link" />
-    <axis xyz="1 0 0" />
+    <origin
+      xyz="-0.5 -0.9705 -0.66"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="rear_right_wheel_link" />
+    <axis
+      xyz="0 1 0" />
   </joint>
 
   <link name="rear_left_wheel_link">
     <inertial>
-      <origin xyz="0.002464 -4.863E-12 6.0718E-12" rpy="0 0 0" />
-      <mass value="19.568" />
-      <inertia ixx="0.76858" ixy="-1.1522E-12" ixz="1.0999E-12" iyy="0.41546" iyz="-2.2866E-13" izz="0.41546" />
+      <origin
+        xyz="-4.86310991476557E-12 -0.00246396479612798 6.07225381088483E-12"
+        rpy="0 0 0" />
+      <mass
+        value="19.568264673306" />
+      <inertia
+        ixx="0.415457972457667"
+        ixy="1.15340457833747E-12"
+        ixz="-2.28669379319239E-13"
+        iyy="0.768576636338705"
+        iyz="-1.1012630858852E-12"
+        izz="0.415457972456137" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://volcanibot_description/meshes/rear_left_wheel_link.STL" />
       </geometry>
-      <material name="">
-        <color rgba="0.79216 0.81961 0.93333 1" />
-      </material>
+      <material name="black"/>  
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -100,26 +126,38 @@
   </link>
 
   <joint name="rear_left_wheel_joint" type="continuous">
-    <origin xyz="-0.9705 -0.5 -0.66" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="rear_left_wheel_link" />
-    <axis xyz="1 0 0" />
+    <origin
+      xyz="-0.5 0.9705 -0.66"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="rear_left_wheel_link" />
+    <axis
+      xyz="0 1 0" />
   </joint>
 
   <link name="front_left_wheel_link">
     <inertial>
-      <origin xyz="0.002464 3.0038E-12 7.1789E-12" rpy="0 0 0" />
-      <mass value="19.568" />
-      <inertia ixx="0.76858" ixy="4.1738E-13" ixz="1.5377E-12" iyy="0.41546" iyz="-5.1651E-13" izz="0.41546" />
+      <origin
+        xyz="3.00337532621597E-12 -0.00246396479612554 7.17892412183119E-12"
+        rpy="0 0 0" />
+      <mass
+        value="19.5682646733116" />
+      <inertia
+        ixx="0.415457972456292"
+        ixy="-4.16150298831959E-13"
+        ixz="-5.16513213527462E-13"
+        iyy="0.768576636338703"
+        iyz="-1.53906128365951E-12"
+        izz="0.415457972457511" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://volcanibot_description/meshes/front_left_wheel_link.STL" />
       </geometry>
-      <material name="">
-        <color rgba="0.79216 0.81961 0.93333 1" />
-      </material>
+      <material name="black"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -130,26 +168,38 @@
   </link>
 
   <joint name="front_left_wheel_joint" type="continuous">
-    <origin xyz="-0.9705 0.5 -0.66" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="front_left_wheel_link" />
-    <axis xyz="1 0 0" />
+    <origin
+      xyz="0.5 0.9705 -0.66"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_left_wheel_link" />
+    <axis
+      xyz="0 1 0" />
   </joint>
 
   <link name="front_right_wheel_link">
     <inertial>
-      <origin xyz="-0.002464 7.518E-12 2.0106E-12" rpy="0 0 0" />
-      <mass value="19.568" />
-      <inertia ixx="0.76858" ixy="-1.5806E-12" ixz="-2.0336E-13" iyy="0.41546" iyz="-6.6262E-13" izz="0.41546" />
+      <origin
+        xyz="7.52264917025514E-12 0.00246396479612709 1.99529281985633E-12"
+        rpy="0 0 0" />
+      <mass
+        value="19.5682646733087" />
+      <inertia
+        ixx="0.415457972457348"
+        ixy="1.58185015757493E-12"
+        ixz="-6.62619227143719E-13"
+        iyy="0.768576636338703"
+        iyz="2.0216381958391E-13"
+        izz="0.415457972456455" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://volcanibot_description/meshes/front_right_wheel_link.STL" />
       </geometry>
-      <material name="">
-        <color rgba="0.79216 0.81961 0.93333 1" />
-      </material>
+      <material name="black"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -160,10 +210,15 @@
   </link>
 
   <joint name="front_right_wheel_joint" type="continuous">
-    <origin xyz="0.9705 0.5 -0.66" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="front_right_wheel_link" />
-    <axis xyz="1 0 0" />
+    <origin
+      xyz="0.5 -0.9705 -0.66"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_right_wheel_link" />
+    <axis
+      xyz="0 1 0" />
   </joint>
 
 </robot>

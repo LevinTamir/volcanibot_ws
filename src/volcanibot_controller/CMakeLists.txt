@@ -9,3 +9,8 @@ install(
 )
 
 ament_package()
+
+install(PROGRAMS
+  src/volcanibot_controller/trajectory_publisher.py
+  DESTINATION lib/${PROJECT_NAME}
+)

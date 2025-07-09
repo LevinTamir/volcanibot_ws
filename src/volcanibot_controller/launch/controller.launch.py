@@ -30,10 +30,18 @@ def generate_launch_description():
         ],
     )
 
+    trajectory_publisher_node = Node(
+        package="volcanibot_controller",
+        executable="trajectory_publisher.py",
+        name="trajectory_publisher",
+        output="screen",
+    )
+
     return LaunchDescription(
         [
             use_sim_time_arg,
             joint_state_broadcaster_spawner,
             volcanibot_controller,
+            trajectory_publisher_node,
         ]
     )

@@ -18,16 +18,10 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
-import launch_ros
-
 
 def generate_launch_description():
     volcanibot_description = get_package_share_directory("volcanibot_description")
 
-    unitree_go2_description = launch_ros.substitutions.FindPackageShare(
-        package="unitree_go2_description").find("unitree_go2_description")
-    default_world_path = os.path.join(unitree_go2_description, "worlds/default.sdf")
-    
     model_arg = DeclareLaunchArgument(
         name="model",
         default_value=os.path.join(volcanibot_description, "urdf", "volcanibot.xacro"),
@@ -69,28 +63,16 @@ def generate_launch_description():
         parameters=[{"robot_description": robot_description, "use_sim_time": True}],
     )
 
-    # gazebo = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         [
-    #             os.path.join(get_package_share_directory("ros_gz_sim"), "launch"),
-    #             "/gz_sim.launch.py",
-    #         ]
-    #     ),
-    #     launch_arguments={
-    #         "gz_args": PythonExpression(["' ", world_path, " -v 4 -r'"])
-    #     }.items(),
-    # )
-    
-    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
-    
-    gz_sim = IncludeLaunchDescription(
+    gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
-        launch_arguments={'gz_args': PathJoinSubstitution([
-            unitree_go2_description,
-            'worlds',
-            'default.sdf'
-        ])}.items(),
+            [
+                os.path.join(get_package_share_directory("ros_gz_sim"), "launch"),
+                "/gz_sim.launch.py",
+            ]
+        ),
+        launch_arguments={
+            "gz_args": PythonExpression(["' ", world_path, " -v 4 -r'"])
+        }.items(),
     )
 
     gz_spawn_entity = Node(
@@ -122,19 +104,9 @@ def generate_launch_description():
         executable="parameter_bridge",
         arguments=[
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
-            # "/camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
-            # "/camera/depth_image@sensor_msgs/msg/Image@gz.msgs.Image",
-            # "/camera/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked",
-            
-            # '/rgbd_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
-            # '/rgbd_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
-            # '/rgbd_camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
-            # '/rgbd_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
-            
-            '/realsense_d435/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
-            '/realsense_d435/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
-            '/realsense_d435/image@sensor_msgs/msg/Image[gz.msgs.Image',
-            '/realsense_d435/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+            "/camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
+            "/camera/depth_image@sensor_msgs/msg/Image@gz.msgs.Image",
+            "/camera/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked",
         ],
     )
 
@@ -144,8 +116,7 @@ def generate_launch_description():
             world_name_arg,
             robot_state_publisher_node,
             gazebo_resource_path,
-            # gazebo,
-            gz_sim,
+            gazebo,
             gz_spawn_entity,
             gz_ros2_bridge,
         ]

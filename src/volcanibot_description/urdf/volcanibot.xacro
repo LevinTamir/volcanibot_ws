@@ -4,6 +4,8 @@
 
   <xacro:arg name="is_ignition" default="true" />
 
+  <xacro:arg name="prefix" default=""/>
+
   <!-- Include Gazebo plugins -->
   <xacro:include filename="$(find volcanibot_description)/urdf/volcanibot_gazebo.xacro" />
 
@@ -13,15 +15,11 @@
   <!-- Colors -->
   <xacro:include filename="$(find volcanibot_description)/urdf/materials.xacro" />
 
+  <!-- rgbd camera -->
+  <xacro:include filename="$(find volcanibot_description)/urdf/sensors/rgbd_camera.urdf.xacro" />
+
   <!-- Define the world link -->
   <link name="base_footprint"/>
-
-  <!-- Define a joint connecting world to base_link -->
-  <joint name="base_footprint_to_base_link" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
-    <origin xyz="0 0 0.9" rpy="0 0 0"/>
-  </joint>
 
   <link name="base_link">
     <inertial>
@@ -52,6 +50,13 @@
       </geometry>
     </collision>
   </link>
+
+  <!-- Define a joint connecting world to base_link -->
+  <joint name="base_footprint_to_base_link" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.9" rpy="0 0 0"/>
+  </joint>
 
   <link name="rear_right_wheel_link">
     <inertial>
@@ -222,7 +227,7 @@
   </joint>
 
   <!-- Depth Camera -->
-  <joint type="fixed" name="camera_joint">
+  <!-- <joint type="fixed" name="camera_joint">
     <origin xyz="0.225 0 0.075" rpy="0 0 0"/>
     <child link="camera_link"/>
     <parent link="base_link"/>
@@ -268,6 +273,71 @@
   </joint>
 
   <link name="camera_link_optical">
+  </link> -->
+
+
+  <!-- Define the camera link -->
+  <!-- <link name="${prefix}rgbd_camera_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="${mesh_file}" xyz="${mesh_xyz_offset}" rpy="${mesh_rpy_offset}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <xacro:if value="${enable_collision}">
+      <collision>
+        <origin xyz="${collision_xyz_offset}" rpy="${collision_rpy_offset}"/>
+        <geometry>
+          <box size="${cam_depth} ${cam_width} ${cam_height}"/>
+        </geometry>
+      </collision>
+    </xacro:if>
+    <inertial>
+      <mass value="${mass}" />
+      <origin xyz="${inertial_xyz_offset}" rpy="${inertial_rpy_offset}"/>
+      <inertia ixx="${ixx}" ixy="${ixy}" ixz="${ixz}"
+               iyy="${iyy}" iyz="${iyz}" izz="${izz}" />
+    </inertial>
   </link>
+  <joint name="${prefix}rgbd_camera_joint" type="fixed">
+    <parent link="${prefix}${parent}"/>
+    <child link="${prefix}rgbd_camera_link"/>
+    <origin xyz="${xyz_offset}" rpy="${rpy_offset}"/>
+  </joint> -->
+  <!-- Camera Link-->
+  <link name="rgbd_camera_link">
+      <inertial>
+          <mass value="0.001"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+      </inertial>
+      <visual>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <geometry>
+              <sphere radius="0.001"/>
+          </geometry>
+          <material name="">
+              <color rgba="0.5 0 0 1" />
+          </material>
+      </visual>
+      <collision>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <geometry>
+              <sphere radius="0.001"/>
+          </geometry>
+      </collision>
+  </link>
+  <joint name="rgbd_camera_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="rgbd_camera_link"/>
+      <origin rpy="0 0 0" xyz="0.225 0 0.075"/>
+  </joint>
+
+  <!-- rgbd camera -->
+  <xacro:rgbd_camera
+    camera_name="realsense_d435"
+    xyz_offset="0.225 0 0.075"
+  />
 
 </robot>

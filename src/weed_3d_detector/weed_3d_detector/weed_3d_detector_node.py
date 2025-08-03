@@ -79,7 +79,8 @@ class Weed3DDetector(Node):
 
         # --- Publish Position as PointStamped ---
         point_msg = PointStamped()
-        point_msg.header.stamp = self.get_clock().now().to_msg()
+        point_msg.header.stamp.sec = 0
+        point_msg.header.stamp.nanosec = 0
         point_msg.header.frame_id = 'camera_link_optical'
         point_msg.point.x = X
         point_msg.point.y = Y
@@ -88,7 +89,9 @@ class Weed3DDetector(Node):
 
         # --- Publish Marker for RViz ---
         marker = Marker()
-        marker.header = point_msg.header
+        marker.header.stamp.sec = 0
+        marker.header.stamp.nanosec = 0
+        marker.header.frame_id = 'camera_link_optical'
         marker.ns = "weed_marker"
         marker.id = 0
         marker.type = Marker.SPHERE
@@ -99,15 +102,15 @@ class Weed3DDetector(Node):
         marker.scale.y = 0.05
         marker.scale.z = 0.05
         marker.color.r = 0.0
-        marker.color.g = 1.0
-        marker.color.b = 0.0
+        marker.color.g = 0.0
+        marker.color.b = 1.0
         marker.color.a = 1.0
         self.marker_publisher.publish(marker)
 
         # --- Optional Visualization ---
         vis_image = self.rgb_image.copy()
         cv2.drawContours(vis_image, [largest_contour], -1, (0, 255, 0), 2)
-        cv2.circle(vis_image, (cx_pixel, cy_pixel), 5, (0, 0, 255), -1)
+        cv2.circle(vis_image, (cx_pixel, cy_pixel), 5, (255, 0, 0), -1)
         cv2.imshow('Weed Detection', vis_image)
         cv2.waitKey(1)
 

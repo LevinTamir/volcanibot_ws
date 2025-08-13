@@ -35,7 +35,7 @@ def generate_launch_description():
             volcanibot_description,
             "worlds",
             PythonExpression(
-                expression=["'", LaunchConfiguration("world_name"), "'", " + '.world'"]
+                expression=["'", LaunchConfiguration("world_name"), "'", " + '.sdf'"]
             ),
         ]
     )

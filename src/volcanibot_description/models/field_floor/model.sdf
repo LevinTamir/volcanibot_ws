@@ -1,0 +1,93 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+    <model name="field_floor">
+        <static>1</static>
+        <link name="link_1">
+            <!-- VISUAL COMPONENT (your existing visual) -->
+            <visual name="visual">
+                <pose>29.0 -19.5 0 0 0 0</pose>
+                <geometry>
+                    <mesh>
+                        <uri>model://field_floor/meshes/field_floor.dae</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                </geometry>
+            </visual>
+            
+            <!-- ADD THIS COLLISION COMPONENT -->
+            <collision name="collision">
+                <pose>0 0 0 0 0 0</pose>
+                <geometry>
+                    <mesh>
+                        <uri>model://field_floor/meshes/field_floor.dae</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1.0</mu>
+                            <mu2>1.0</mu2>
+                        </ode>
+                    </friction>
+                    <contact>
+                        <ode>
+                            <kp>1000000</kp>
+                            <kd>1</kd>
+                        </ode>
+                    </contact>
+                </surface>
+            </collision>
+            
+            <!-- ADD INERTIAL PROPERTIES -->
+            <inertial>
+                <mass>1</mass>
+                <inertia>
+                    <ixx>1</ixx>
+                    <iyy>1</iyy>
+                    <izz>1</izz>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyz>0</iyz>
+                </inertia>
+            </inertial>
+        </link>
+    </model>
+</sdf>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <?xml version="1.0" ?>
+<sdf version="1.4">
+    <model name="field_floor">
+        <static>1</static>
+        <link name="link_1">
+        <visual name="visual">
+        <pose>0 0 0 0 0 0</pose>
+            <geometry>
+                <mesh>
+                    <uri>model://field_floor/meshes/field_floor.dae</uri>
+                    <scale>1 1 1</scale>
+                </mesh>
+            </geometry>
+        </visual>
+        </link>
+    </model>
+</sdf> -->

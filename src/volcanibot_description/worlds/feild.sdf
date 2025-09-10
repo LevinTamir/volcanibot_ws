@@ -66,7 +66,7 @@
 
     <!-- Ground -->
     <include>
-      <uri>model://feild_ground</uri>
+      <uri>model://field_floor</uri>
     </include>
 
     <include>

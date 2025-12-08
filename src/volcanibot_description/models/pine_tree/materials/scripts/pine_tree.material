@@ -4,6 +4,9 @@ material PineTree/Branch
   {
     pass
     {
+      ambient 0.2 0.4 0.2 1.0
+      diffuse 0.3 0.5 0.3 1.0
+      specular 0.1 0.1 0.1 1.0 12.5
       alpha_rejection greater 128
 
       texture_unit
@@ -20,6 +23,10 @@ material PineTree/Bark
   {
     pass
     {
+      ambient 0.35 0.25 0.15 1.0
+      diffuse 0.45 0.35 0.25 1.0
+      specular 0.05 0.05 0.05 1.0 12.5
+
       texture_unit
       {
         texture bark_diffuse.png

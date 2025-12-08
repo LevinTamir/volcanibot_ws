@@ -38,6 +38,8 @@
     <!-- Sky -->
     <scene>
     <grid>false</grid>
+    <ambient>0.4 0.4 0.4 1</ambient>
+    <background>0.7 0.8 1.0 1</background>
       <sky>
         <clouds>
           <speed>12</speed>
@@ -64,9 +66,10 @@
     <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
     <atmosphere type="adiabatic"/>
 
-    <!-- Ground -->
+    <!-- Field floor scaled to cover entire ground -->
     <include>
       <uri>model://field_floor</uri>
+      <pose>0 0 0 0 0 0</pose>
     </include>
 
     <include>
@@ -97,6 +100,80 @@
       <uri>model://plant</uri>
       <name>plant_5</name>
       <pose>1 0 0 0 0 0</pose>
+    </include>
+
+    <!-- Trees around the perimeter -->
+    <include>
+      <uri>model://oak_tree</uri>
+      <name>oak_tree_1</name>
+      <pose>-10 -10 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://oak_tree</uri>
+      <name>oak_tree_2</name>
+      <pose>15 -8 0 0 0 0.5</pose>
+    </include>
+
+    <include>
+      <uri>model://pine_tree</uri>
+      <name>pine_tree_1</name>
+      <pose>-12 10 0 0 0 1.2</pose>
+    </include>
+
+    <include>
+      <uri>model://pine_tree</uri>
+      <name>pine_tree_2</name>
+      <pose>18 12 0 0 0 2.8</pose>
+    </include>
+
+    <include>
+      <uri>model://oak_tree</uri>
+      <name>oak_tree_3</name>
+      <pose>20 -15 0 0 0 1.8</pose>
+    </include>
+
+    <include>
+      <uri>model://pine_tree</uri>
+      <name>pine_tree_3</name>
+      <pose>-15 -12 0 0 0 0.3</pose>
+    </include>
+
+    <!-- Additional vegetation for realism -->
+    <include>
+      <uri>model://big_plant</uri>
+      <name>big_plant_1</name>
+      <pose>-8 5 0 0 0 0.8</pose>
+    </include>
+
+    <include>
+      <uri>model://big_plant</uri>
+      <name>big_plant_2</name>
+      <pose>12 -5 0 0 0 2.1</pose>
+    </include>
+
+    <include>
+      <uri>model://big_plant</uri>
+      <name>big_plant_3</name>
+      <pose>-10 -5 0 0 0 1.5</pose>
+    </include>
+
+    <include>
+      <uri>model://big_plant</uri>
+      <name>big_plant_4</name>
+      <pose>15 8 0 0 0 0.3</pose>
+    </include>
+
+    <include>
+      <uri>model://oak_tree</uri>
+      <name>oak_tree_4</name>
+      <pose>-5 -15 0 0 0 2.3</pose>
+    </include>
+
+    <include>
+      <uri>model://pine_tree</uri>
+      <name>pine_tree_4</name>
+      <pose>10 15 0 0 0 1.7</pose>
     </include>
 
   </world>

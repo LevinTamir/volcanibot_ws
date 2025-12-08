@@ -85,9 +85,9 @@ def generate_launch_description():
             "-name",
             "volcanibot",
             "-x",
-            "2.0",
+            "-6.0",
             "-y",
-            "2.0",
+            "5.0",
             "-z",
             "0",
             "-r",
@@ -95,7 +95,7 @@ def generate_launch_description():
             "-p",
             "0",
             "-Y",
-            "3.14",
+            "1.57",
         ],
     )
 

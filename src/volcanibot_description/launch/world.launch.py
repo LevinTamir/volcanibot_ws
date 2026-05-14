@@ -23,7 +23,7 @@ def generate_launch_description():
 
     # Add your own gazebo library path here
     gazebo_models_path = (
-        "/home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models"
+        "/home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models"
     )
     if "GZ_SIM_RESOURCE_PATH" not in os.environ:
         os.environ["GZ_SIM_RESOURCE_PATH"] = gazebo_models_path

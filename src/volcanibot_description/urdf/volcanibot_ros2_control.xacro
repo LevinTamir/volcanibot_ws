@@ -4,57 +4,70 @@
 
     <ros2_control name="RobotSystem" type="system">
 
-        <!-- ros2_control Gazebo -->
-        <!-- ROS 2 Humble -->
-        <xacro:if value="$(arg is_ignition)">
-            <hardware>
-                <plugin>ign_ros2_control/IgnitionSystem</plugin>
-            </hardware>
-        </xacro:if>
+        <hardware>
+            <xacro:if value="$(arg use_sim)">
+                <!-- ROS 2 Humble: Ignition Gazebo plugin -->
+                <xacro:if value="$(arg is_ignition)">
+                    <plugin>ign_ros2_control/IgnitionSystem</plugin>
+                </xacro:if>
+                <!-- ROS 2 Iron and above: gz Sim plugin -->
+                <xacro:unless value="$(arg is_ignition)">
+                    <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+                </xacro:unless>
+            </xacro:if>
+            <xacro:unless value="$(arg use_sim)">
+                <plugin>volcanibot_hardware_interface/RoboteqDiffDriveSystem</plugin>
+                <param name="port">$(arg serial_port)</param>
+                <param name="baud_rate">$(arg baud_rate)</param>
+                <param name="timeout_ms">1000</param>
+                <param name="gear_ratio">1.0</param>
+                <param name="left_wheel_name">rear_left_wheel_joint</param>
+                <param name="right_wheel_name">rear_right_wheel_joint</param>
+            </xacro:unless>
+        </hardware>
 
-        <!-- ROS 2 Iron or above -->
-        <xacro:unless value="$(arg is_ignition)">
-            <hardware>
-                <plugin>gz_ros2_control/GazeboSimSystem</plugin>
-            </hardware>
-        </xacro:unless>
-        
-        <!-- ros2_control Common Interfaces -->
-        <joint name="rear_right_wheel_joint">
-            <command_interface name="velocity">
-              <param name="min">-1</param>
-              <param name="max">1</param>
-            </command_interface>
-            <state_interface name="position" />
-            <state_interface name="velocity" />
-        </joint>
-
+        <!-- In sim, all 4 wheels are independently controlled by Gazebo (the
+             physics engine doesn't support URDF mimic joints). On the real
+             robot only the rear wheels are motorized; the front wheels are
+             mechanically chained to the rear and so are not exposed to
+             ros2_control. -->
         <joint name="rear_left_wheel_joint">
             <command_interface name="velocity">
-              <param name="min">-1</param>
-              <param name="max">1</param>
+              <param name="min">-10</param>
+              <param name="max">10</param>
             </command_interface>
             <state_interface name="position" />
             <state_interface name="velocity" />
         </joint>
 
-        <joint name="front_right_wheel_joint">
+        <joint name="rear_right_wheel_joint">
             <command_interface name="velocity">
-              <param name="min">-1</param>
-              <param name="max">1</param>
+              <param name="min">-10</param>
+              <param name="max">10</param>
             </command_interface>
             <state_interface name="position" />
             <state_interface name="velocity" />
         </joint>
 
-        <joint name="front_left_wheel_joint">
-            <command_interface name="velocity">
-              <param name="min">-1</param>
-              <param name="max">1</param>
-            </command_interface>
-            <state_interface name="position" />
-            <state_interface name="velocity" />
-        </joint>            
+        <xacro:if value="$(arg use_sim)">
+            <joint name="front_left_wheel_joint">
+                <command_interface name="velocity">
+                  <param name="min">-10</param>
+                  <param name="max">10</param>
+                </command_interface>
+                <state_interface name="position" />
+                <state_interface name="velocity" />
+            </joint>
+
+            <joint name="front_right_wheel_joint">
+                <command_interface name="velocity">
+                  <param name="min">-10</param>
+                  <param name="max">10</param>
+                </command_interface>
+                <state_interface name="position" />
+                <state_interface name="velocity" />
+            </joint>
+        </xacro:if>
     </ros2_control>
 
 </robot>

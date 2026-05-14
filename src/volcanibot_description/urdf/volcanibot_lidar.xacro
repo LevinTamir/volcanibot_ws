@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="volcanibot">
+
+  <!--
+    Ouster Rev5 OS2-128 mount.
+
+    Dimensions (Ouster datasheet, Rev5): ~89 mm diameter x ~87 mm tall, ~1.04 kg.
+    Approximated here as a black cylinder; replace with a mesh once one is
+    available (Ouster ships CAD on their downloads page).
+
+    The real-hardware `ouster_ros` driver publishes its own static TFs
+    os_sensor -> os_lidar and os_sensor -> os_imu. For sim we mirror just
+    os_sensor -> os_lidar so RViz can resolve frames against the gz_lidar
+    topic without the driver running.
+  -->
+
+  <link name="os_sensor">
+    <inertial>
+      <mass value="1.04"/>
+      <origin xyz="0 0 0.0435" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.0435" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.087" radius="0.0445"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.0435" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.087" radius="0.0445"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="os_sensor_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="os_sensor"/>
+    <origin xyz="0.4 0 -0.35" rpy="0 0 0"/>
+  </joint>
+
+  <xacro:if value="$(arg use_sim)">
+    <link name="os_lidar"/>
+    <joint name="os_sensor_to_os_lidar" type="fixed">
+      <parent link="os_sensor"/>
+      <child link="os_lidar"/>
+      <origin xyz="0 0 0.038" rpy="0 0 0"/>
+    </joint>
+  </xacro:if>
+
+</robot>

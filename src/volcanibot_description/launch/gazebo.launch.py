@@ -8,6 +8,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     SetEnvironmentVariable,
 )
+from launch.conditions import IfCondition
 from launch.substitutions import (
     Command,
     LaunchConfiguration,
@@ -30,6 +31,20 @@ def generate_launch_description():
 
     world_name_arg = DeclareLaunchArgument(name="world_name", default_value="empty")
 
+    lidar_arg = DeclareLaunchArgument(
+        name="lidar",
+        default_value="false",
+        choices=["true", "false"],
+        description="Include the Ouster Rev5 OS2 lidar in the URDF and bridge /scan.",
+    )
+
+    camera_arg = DeclareLaunchArgument(
+        name="camera",
+        default_value="false",
+        choices=["true", "false"],
+        description="Include the RGBD camera in the URDF and bridge /camera/* topics.",
+    )
+
     world_path = PathJoinSubstitution(
         [
             volcanibot_description,
@@ -51,9 +66,13 @@ def generate_launch_description():
     is_ignition = "True" if ros_distro == "humble" else "False"
 
     robot_description = ParameterValue(
-        Command(
-            ["xacro ", LaunchConfiguration("model"), " is_ignition:=", is_ignition]
-        ),
+        Command([
+            "xacro ", LaunchConfiguration("model"),
+            " is_ignition:=", is_ignition,
+            " use_sim:=true",
+            " lidar:=", LaunchConfiguration("lidar"),
+            " camera:=", LaunchConfiguration("camera"),
+        ]),
         value_type=str,
     )
 
@@ -80,45 +99,63 @@ def generate_launch_description():
         executable="create",
         output="screen",
         arguments=[
-            "-topic",
-            "robot_description",
-            "-name",
-            "volcanibot",
-            "-x",
-            "-6.0",
-            "-y",
-            "5.0",
-            "-z",
-            "0",
-            "-r",
-            "0",
-            "-p",
-            "0",
-            "-Y",
-            "1.57",
+            "-topic", "robot_description",
+            "-name", "volcanibot",
+            "-x", "-6.0",
+            "-y", "5.0",
+            "-z", "0",
+            "-r", "0",
+            "-p", "0",
+            "-Y", "1.57",
         ],
     )
 
-    gz_ros2_bridge = Node(
+    clock_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=[
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+        ],
+    )
+
+    camera_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
             "/camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
             "/camera/image@sensor_msgs/msg/Image@gz.msgs.Image",
             "/camera/depth_image@sensor_msgs/msg/Image@gz.msgs.Image",
             "/camera/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked",
         ],
+        condition=IfCondition(LaunchConfiguration("camera")),
+    )
+
+    # A gz `gpu_lidar` with <topic>scan</topic> publishes two gz topics:
+    #   /scan         -- gz.msgs.LaserScan       (single horizontal ring)
+    #   /scan/points  -- gz.msgs.PointCloudPacked (3D cloud, what users want)
+    # Bridge both so users can pick whichever fits their consumer.
+    lidar_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
+        ],
+        condition=IfCondition(LaunchConfiguration("lidar")),
     )
 
     return LaunchDescription(
         [
             model_arg,
             world_name_arg,
+            lidar_arg,
+            camera_arg,
             robot_state_publisher_node,
             gazebo_resource_path,
             gazebo,
             gz_spawn_entity,
-            gz_ros2_bridge,
+            clock_bridge,
+            camera_bridge,
+            lidar_bridge,
         ]
     )

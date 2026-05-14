@@ -3,6 +3,11 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="volcanibot">
 
   <xacro:arg name="is_ignition" default="true" />
+  <xacro:arg name="use_sim" default="true" />
+  <xacro:arg name="lidar" default="false" />
+  <xacro:arg name="camera" default="false" />
+  <xacro:arg name="serial_port" default="/dev/roboteq" />
+  <xacro:arg name="baud_rate" default="115200" />
 
   <!-- Include Gazebo plugins -->
   <xacro:include filename="$(find volcanibot_description)/urdf/volcanibot_gazebo.xacro" />
@@ -12,6 +17,11 @@
 
   <!-- Colors -->
   <xacro:include filename="$(find volcanibot_description)/urdf/materials.xacro" />
+
+  <!-- Optional Ouster Rev5 (OS2) lidar -->
+  <xacro:if value="$(arg lidar)">
+    <xacro:include filename="$(find volcanibot_description)/urdf/volcanibot_lidar.xacro" />
+  </xacro:if>
 
   <!-- Define the world link -->
   <link name="base_footprint"/>
@@ -115,7 +125,7 @@
       <geometry>
         <mesh filename="package://volcanibot_description/meshes/rear_left_wheel_link.STL" />
       </geometry>
-      <material name="black"/>  
+      <material name="black"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -221,53 +231,53 @@
       xyz="0 1 0" />
   </joint>
 
-    <!-- Depth Camera -->
-  <joint type="fixed" name="camera_joint">
-    <origin xyz="0.6 0 0.07" rpy="0 0.2 0"/>
-    <child link="camera_link"/>
-    <parent link="base_link"/>
-    <axis xyz="0 1 0" />
-  </joint>
+  <!-- Optional RGBD camera -->
+  <xacro:if value="$(arg camera)">
+    <joint type="fixed" name="camera_joint">
+      <origin xyz="0.6 0 0.07" rpy="0 0.2 0"/>
+      <child link="camera_link"/>
+      <parent link="base_link"/>
+      <axis xyz="0 1 0" />
+    </joint>
 
-  <link name='camera_link'>
-    <pose>0 0 0 0 0 0</pose>
-    <inertial>
-      <mass value="0.1"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <inertia
-          ixx="1e-6" ixy="0" ixz="0"
-          iyy="1e-6" iyz="0"
-          izz="1e-6"
-      />
-    </inertial>
+    <link name="camera_link">
+      <inertial>
+        <mass value="0.1"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia
+            ixx="1e-6" ixy="0" ixz="0"
+            iyy="1e-6" iyz="0"
+            izz="1e-6"
+        />
+      </inertial>
 
-    <collision name='collision'>
-      <origin xyz="0 0 0" rpy="0 0 0"/> 
-      <geometry>
-         <box size=".03 .03 .03"/>
-      </geometry>
-    </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.03 0.03 0.03"/>
+        </geometry>
+      </collision>
 
-    <visual name='camera_link_visual'>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size=".03 .03 .03"/>
-      </geometry>
-    </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.03 0.03 0.03"/>
+        </geometry>
+      </visual>
+    </link>
 
-  </link>
+    <gazebo reference="camera_link">
+      <material>Gazebo/Red</material>
+    </gazebo>
 
-  <gazebo reference="camera_link">
-    <material>Gazebo/Red</material>
-  </gazebo>
+    <joint type="fixed" name="camera_optical_joint">
+      <origin xyz="0 0 0" rpy="-1.5707 0 -1.5707"/>
+      <child link="camera_link_optical"/>
+      <parent link="camera_link"/>
+    </joint>
 
-  <joint type="fixed" name="camera_optical_joint">
-    <origin xyz="0 0 0" rpy="-1.5707 0 -1.5707"/>
-    <child link="camera_link_optical"/>
-    <parent link="camera_link"/>
-  </joint>
-
-  <link name="camera_link_optical">
-  </link>
+    <link name="camera_link_optical">
+    </link>
+  </xacro:if>
 
 </robot>

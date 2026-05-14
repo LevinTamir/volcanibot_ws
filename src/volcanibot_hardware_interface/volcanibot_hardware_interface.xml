@@ -1,0 +1,11 @@
+<library path="volcanibot_hardware_interface">
+  <class name="volcanibot_hardware_interface/RoboteqDiffDriveSystem"
+         type="volcanibot_hardware_interface::RoboteqDiffDriveSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Roboteq dual-channel motor controller hardware interface for differential-drive robots.
+      Talks to a single Roboteq controller over USB-serial; channel 1 drives the left wheel,
+      channel 2 drives the right wheel.
+    </description>
+  </class>
+</library>

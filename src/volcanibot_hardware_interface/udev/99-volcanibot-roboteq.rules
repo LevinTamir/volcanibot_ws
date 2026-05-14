@@ -1,0 +1,17 @@
+# Volcanibot Roboteq motor controller -- stable /dev/roboteq symlink so the
+# ros2_control hardware interface always finds the controller regardless of
+# /dev/ttyACMx renumbering.
+#
+# Setup:
+#   1. Plug in the Roboteq via USB and confirm /dev/ttyACM* (or /dev/ttyUSB*) appears.
+#   2. Find the device's USB IDs and serial:
+#        udevadm info -n /dev/ttyACM0 | grep -E 'ID_VENDOR_ID|ID_MODEL_ID|ID_SERIAL_SHORT'
+#   3. Either run ./install.sh (recommended; auto-fills the placeholders) or
+#      replace <VID>/<PID>/<SERIAL> below by hand.
+#   4. Install:
+#        sudo cp 99-volcanibot-roboteq.rules /etc/udev/rules.d/
+#        sudo udevadm control --reload-rules
+#        sudo udevadm trigger
+#   5. Unplug + replug. Verify /dev/roboteq exists and points to the right tty.
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="<VID>", ATTRS{idProduct}=="<PID>", ATTRS{serial}=="<SERIAL>", SYMLINK+="roboteq", MODE="0666", GROUP="dialout"

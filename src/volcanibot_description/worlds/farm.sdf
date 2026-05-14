@@ -123,14 +123,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -158,7 +158,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -170,7 +170,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -198,7 +198,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -210,7 +210,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -224,7 +224,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -236,7 +236,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -250,7 +250,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -262,7 +262,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -276,7 +276,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -288,7 +288,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -302,7 +302,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -314,7 +314,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -328,7 +328,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -340,7 +340,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -354,7 +354,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -366,7 +366,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -380,7 +380,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -392,7 +392,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/big_plant/mesh/big_plant.stl</uri>
             </mesh>
           </geometry>
         </collision>
@@ -406,14 +406,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -427,14 +427,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -462,14 +462,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/oak_tree/meshes/oak_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/oak_tree/meshes/oak_tree.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/oak_tree/meshes/oak_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/oak_tree/meshes/oak_tree.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -497,14 +497,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/oak_tree/meshes/oak_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/oak_tree/meshes/oak_tree.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file:///home/tamir/ros2_workspaces/volcanibot_ws/src/volcanibot_description/models/oak_tree/meshes/oak_tree.dae</uri>
+              <uri>file:///home/tamir/workspaces/volcanibot_ws/src/volcanibot_description/models/oak_tree/meshes/oak_tree.dae</uri>
             </mesh>
           </geometry>
         </collision>

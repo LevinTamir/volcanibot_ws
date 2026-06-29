@@ -114,8 +114,12 @@ public:
 
     long ch1 = 0, ch2 = 0;
     if (std::sscanf(response.c_str(), "C=%ld:%ld", &ch1, &ch2) != 2) return false;
-    left_count = ch1;
-    right_count = ch2;
+    // On this robot the encoder feedback channels are swapped relative to the
+    // motor command channels: channel 1 -> right wheel, channel 2 -> left wheel.
+    // Without this swap the odometry yaw comes out inverted (turns the wrong way
+    // in RViz) even though the robot drives correctly.
+    left_count = ch2;
+    right_count = ch1;
     return true;
   }
 

@@ -60,6 +60,10 @@ hardware_interface::CallbackReturn RoboteqDiffDriveSystem::on_init(
     std::stod(param_or(info_, "left_encoder_sign", std::to_string(cfg_.left_encoder_sign)));
   cfg_.right_encoder_sign =
     std::stod(param_or(info_, "right_encoder_sign", std::to_string(cfg_.right_encoder_sign)));
+  cfg_.left_command_sign =
+    std::stod(param_or(info_, "left_command_sign", std::to_string(cfg_.left_command_sign)));
+  cfg_.right_command_sign =
+    std::stod(param_or(info_, "right_command_sign", std::to_string(cfg_.right_command_sign)));
   cfg_.left_wheel_name = param_or(info_, "left_wheel_name", cfg_.left_wheel_name);
   cfg_.right_wheel_name = param_or(info_, "right_wheel_name", cfg_.right_wheel_name);
 
@@ -229,8 +233,8 @@ hardware_interface::return_type RoboteqDiffDriveSystem::write(
 {
   if (!comm_.connected()) return hardware_interface::return_type::ERROR;
   comm_.drive(
-    rad_per_sec_to_rpm(left_cmd_vel_, cfg_.gear_ratio),
-    rad_per_sec_to_rpm(right_cmd_vel_, cfg_.gear_ratio));
+    cfg_.left_command_sign * rad_per_sec_to_rpm(left_cmd_vel_, cfg_.gear_ratio),
+    cfg_.right_command_sign * rad_per_sec_to_rpm(right_cmd_vel_, cfg_.gear_ratio));
   return hardware_interface::return_type::OK;
 }
 

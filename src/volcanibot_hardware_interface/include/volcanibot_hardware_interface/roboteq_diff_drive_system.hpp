@@ -49,6 +49,10 @@ public:
     double right_counts_per_rev = 0.0;
     double left_encoder_sign = 1.0;   // flip to -1.0 if counts decrease when the wheel drives forward
     double right_encoder_sign = 1.0;
+    // Command direction per wheel: -1.0 if a positive command drives that wheel
+    // backward (e.g. a mirror-mounted motor). Separate from the encoder signs.
+    double left_command_sign = 1.0;
+    double right_command_sign = 1.0;
     std::string left_wheel_name = "left_wheel_joint";
     std::string right_wheel_name = "right_wheel_joint";
   };

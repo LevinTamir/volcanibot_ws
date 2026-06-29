@@ -19,7 +19,7 @@ def generate_launch_description():
             os.path.join(
                 get_package_share_directory("volcanibot_controller"),
                 "config",
-                "joy_teleop.yaml",
+                "joy_teleop_bt.yaml",   # default profile; teleop.launch.py supports usb too
             ),
             {"use_sim_time": LaunchConfiguration("use_sim_time")},
         ],

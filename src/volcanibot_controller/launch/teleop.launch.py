@@ -4,7 +4,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 
@@ -15,6 +15,9 @@ def generate_launch_description():
     (/nav_vel) by priority and forwards the winner to the controller's
     cmd_vel topic. The joystick driver + joy_teleop are optional so that a
     headless sim or an autonomy-only run can disable them with joystick:=false.
+
+    The Xbox pad enumerates differently over USB vs Bluetooth, so the joystick
+    mapping is split into profiles selected by joy_profile (default: bt).
 
     Included by both real_bringup and sim_bringup.
     """
@@ -34,7 +37,20 @@ def generate_launch_description():
         description="Launch the joystick driver + joy_teleop (publishes /joy_vel).",
     )
 
+    joy_profile_arg = DeclareLaunchArgument(
+        "joy_profile",
+        default_value="bt",
+        choices=["bt", "usb"],
+        description="Joystick mapping profile: bt (Bluetooth, default) or usb. "
+                    "The Xbox pad's axis/button indices differ between the two.",
+    )
+
     use_sim_time = LaunchConfiguration("use_sim_time")
+
+    # Pick config/joy_teleop_<profile>.yaml at launch time.
+    joy_teleop_params = PathJoinSubstitution([
+        config_dir, ["joy_teleop_", LaunchConfiguration("joy_profile"), ".yaml"],
+    ])
 
     # twist_mux output (cmd_vel_out) -> the topic DiffDriveController listens on.
     twist_mux = Node(
@@ -63,7 +79,7 @@ def generate_launch_description():
         package="joy_teleop",
         executable="joy_teleop",
         parameters=[
-            os.path.join(config_dir, "joy_teleop.yaml"),
+            joy_teleop_params,
             {"use_sim_time": use_sim_time},
         ],
         condition=IfCondition(LaunchConfiguration("joystick")),
@@ -72,6 +88,7 @@ def generate_launch_description():
     return LaunchDescription([
         use_sim_time_arg,
         joystick_arg,
+        joy_profile_arg,
         twist_mux,
         joy_node,
         joy_teleop,

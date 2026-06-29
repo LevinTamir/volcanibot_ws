@@ -50,6 +50,13 @@ def generate_launch_description():
         description="Launch the joystick driver + joy_teleop (publishes /joy_vel).",
     )
 
+    joy_profile_arg = DeclareLaunchArgument(
+        "joy_profile",
+        default_value="bt",
+        choices=["bt", "usb"],
+        description="Joystick mapping profile (bt = Bluetooth, default; or usb).",
+    )
+
     yolo_arg = DeclareLaunchArgument(
         "yolo",
         default_value="false",
@@ -99,6 +106,7 @@ def generate_launch_description():
         launch_arguments=[
             ("use_sim_time", LaunchConfiguration("use_sim_time")),
             ("joystick", LaunchConfiguration("joystick")),
+            ("joy_profile", LaunchConfiguration("joy_profile")),
         ],
     )
 
@@ -133,6 +141,7 @@ def generate_launch_description():
         camera_arg,
         rviz_arg,
         joystick_arg,
+        joy_profile_arg,
         yolo_arg,
         yolo_device_arg,
         follow_arg,

@@ -14,3 +14,10 @@ repositories:
     type: git
     url: https://github.com/omribu/yolo_ros.git
     version: e6e71097b76a55603e52db4e94683f11490267a1
+  trimble_driver_ros:
+    type: git
+    url: https://github.com/trimble-oss/trimble_driver_ros.git
+    # Pinned to the last commit using the gsof_msgs / trimble_driver_ros package
+    # names. Newer upstream renamed them (trimble_gsof_msgs / trimble_driver),
+    # which would break the gps.launch.py package/executable references.
+    version: 613dca04e9d40d31c20e5b0019b457eeb92951b7

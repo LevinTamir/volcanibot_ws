@@ -1,0 +1,13 @@
+# Trimble GSOF client (trimble_driver_ros gsof_client_node) parameters.
+# Values match the receiver as wired on the real robot. Update ip/port for a
+# different receiver or network. This is only loaded when gps:=true.
+gsof_client:
+  ros__parameters:
+    ip: "192.168.1.132"     # Trimble receiver IP
+    port: 28002             # GSOF stream TCP port
+    parent_frame: "odom"
+    child_frame: "base_footprint"
+    publish_tf: false       # navsat_transform owns the map->odom path
+    publish_ros_msgs: true  # NavSatFix etc. on /gsof_client/*
+    publish_gsof_msgs: true # raw gsof_msgs for debugging
+    time_source: "now"      # now | gps | gps_time_of_week

@@ -48,6 +48,14 @@ def generate_launch_description():
                     "/camera/points).",
     )
 
+    gps_arg = DeclareLaunchArgument(
+        "gps",
+        default_value="false",
+        choices=["true", "false"],
+        description="Include the GPS antennas in the URDF and launch the "
+                    "Trimble GSOF client + navsat_transform.",
+    )
+
     sensor_hostname_arg = DeclareLaunchArgument(
         "sensor_hostname",
         default_value="os-122000000000.local",
@@ -112,6 +120,7 @@ def generate_launch_description():
             " use_sim:=false",
             " lidar:=", LaunchConfiguration("lidar"),
             " camera:=", LaunchConfiguration("camera"),
+            " gps:=", LaunchConfiguration("gps"),
             " serial_port:=", LaunchConfiguration("serial_port"),
             " baud_rate:=", LaunchConfiguration("baud_rate"),
         ]),
@@ -203,6 +212,17 @@ def generate_launch_description():
         ],
     )
 
+    # Optional Trimble RTK GPS + navsat transform.
+    gps_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(volcanibot_bringup_share, "launch", "gps.launch.py")
+        ),
+        launch_arguments=[
+            ("gps", LaunchConfiguration("gps")),
+            ("use_sim_time", LaunchConfiguration("use_sim_time")),
+        ],
+    )
+
     # Optional YOLO perception on the camera stream (/yolo/detections_3d).
     perception_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -248,6 +268,7 @@ def generate_launch_description():
         baud_rate_arg,
         lidar_arg,
         camera_arg,
+        gps_arg,
         sensor_hostname_arg,
         ouster_params_file_arg,
         rviz_arg,
@@ -261,6 +282,7 @@ def generate_launch_description():
         joint_state_broadcaster_spawner,
         volcanibot_controller_spawner,
         realsense_camera,
+        gps_launch,
         teleop_launch,
         perception_launch,
         rviz_node,

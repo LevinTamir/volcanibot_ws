@@ -6,6 +6,7 @@
   <xacro:arg name="use_sim" default="true" />
   <xacro:arg name="lidar" default="false" />
   <xacro:arg name="camera" default="false" />
+  <xacro:arg name="gps" default="false" />
   <xacro:arg name="serial_port" default="/dev/roboteq" />
   <xacro:arg name="baud_rate" default="115200" />
 
@@ -287,6 +288,62 @@
 
     <link name="camera_link_optical">
     </link>
+  </xacro:if>
+
+  <!-- Optional dual GPS/RTK antennas (Trimble). Physical payload; included
+       only when gps:=true so sim and lidar/camera-only runs stay uncluttered. -->
+  <xacro:if value="$(arg gps)">
+    <link name="gps_antenna_pos_right">
+      <visual>
+        <origin xyz="-0.074 0.075 0" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="package://volcanibot_description/meshes/GPS_Antenna.STL" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="gps_silver">
+          <color rgba="0.75 0.75 0.78 1"/>
+        </material>
+      </visual>
+      <visual>
+        <origin xyz="0 0 -0.555" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.02 0.02 1.11"/>
+        </geometry>
+        <material name="gps_rod">
+          <color rgba="0.5 0.5 0.52 1"/>
+        </material>
+      </visual>
+    </link>
+    <joint name="gps_antenna_pos_right_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="gps_antenna_pos_right"/>
+      <origin xyz="-0.6 -0.87 0.97" rpy="0 0 0"/>
+    </joint>
+
+    <link name="gps_antenna_pos_left">
+      <visual>
+        <origin xyz="-0.074 0.075 0" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="package://volcanibot_description/meshes/GPS_Antenna.STL" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="gps_silver">
+          <color rgba="0.75 0.75 0.78 1"/>
+        </material>
+      </visual>
+      <visual>
+        <origin xyz="0 0 -0.555" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.02 0.02 1.11"/>
+        </geometry>
+        <material name="gps_rod">
+          <color rgba="0.5 0.5 0.52 1"/>
+        </material>
+      </visual>
+    </link>
+    <joint name="gps_antenna_pos_left_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="gps_antenna_pos_left"/>
+      <origin xyz="0.6 0.87 0.97" rpy="0 0 0"/>
+    </joint>
   </xacro:if>
 
 </robot>

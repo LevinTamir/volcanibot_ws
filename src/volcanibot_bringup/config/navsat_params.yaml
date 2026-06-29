@@ -1,0 +1,14 @@
+# robot_localization navsat_transform_node parameters.
+# Converts the Trimble NavSatFix into an odom-frame pose. Only loaded when
+# gps:=true. magnetic_declination/yaw_offset need calibrating for the site.
+navsat_transform:
+  ros__parameters:
+    frequency: 10.0
+    delay: 0.0
+    magnetic_declination_radians: 0.0   # TODO: set for deployment site
+    yaw_offset: 0.0
+    zero_altitude: false
+    broadcast_cartesian_transform: true
+    publish_filtered_gps: true
+    use_odometry_yaw: false
+    wait_for_datum: false

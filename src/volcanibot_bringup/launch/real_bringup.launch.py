@@ -66,6 +66,13 @@ def generate_launch_description():
         description="Open RViz with the volcanibot_description display config.",
     )
 
+    joystick_arg = DeclareLaunchArgument(
+        "joystick",
+        default_value="true",
+        choices=["true", "false"],
+        description="Launch the joystick driver + joy_teleop (publishes /joy_vel).",
+    )
+
     volcanibot_description_share = get_package_share_directory("volcanibot_description")
     volcanibot_controller_share = get_package_share_directory("volcanibot_controller")
 
@@ -129,6 +136,18 @@ def generate_launch_description():
         parameters=[{"use_sim_time": LaunchConfiguration("use_sim_time")}],
     )
 
+    # Command arbitration (twist_mux) + optional joystick. Muxes /joy_vel and
+    # /nav_vel onto volcanibot_controller/cmd_vel by priority.
+    teleop_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(volcanibot_controller_share, "launch", "teleop.launch.py")
+        ),
+        launch_arguments=[
+            ("use_sim_time", LaunchConfiguration("use_sim_time")),
+            ("joystick", LaunchConfiguration("joystick")),
+        ],
+    )
+
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -164,10 +183,12 @@ def generate_launch_description():
         sensor_hostname_arg,
         ouster_params_file_arg,
         rviz_arg,
+        joystick_arg,
         robot_state_publisher,
         controller_manager,
         joint_state_broadcaster_spawner,
         volcanibot_controller_spawner,
+        teleop_launch,
         rviz_node,
     ]
     if ouster_driver is not None:

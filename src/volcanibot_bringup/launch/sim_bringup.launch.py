@@ -43,6 +43,13 @@ def generate_launch_description():
         description="Open RViz with the volcanibot_description display config.",
     )
 
+    joystick_arg = DeclareLaunchArgument(
+        "joystick",
+        default_value="true",
+        choices=["true", "false"],
+        description="Launch the joystick driver + joy_teleop (publishes /joy_vel).",
+    )
+
     volcanibot_description_share = get_package_share_directory("volcanibot_description")
     volcanibot_controller_share = get_package_share_directory("volcanibot_controller")
 
@@ -64,6 +71,16 @@ def generate_launch_description():
         launch_arguments=[("use_sim_time", LaunchConfiguration("use_sim_time"))],
     )
 
+    teleop_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(volcanibot_controller_share, "launch", "teleop.launch.py")
+        ),
+        launch_arguments=[
+            ("use_sim_time", LaunchConfiguration("use_sim_time")),
+            ("joystick", LaunchConfiguration("joystick")),
+        ],
+    )
+
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -83,7 +100,9 @@ def generate_launch_description():
         lidar_arg,
         camera_arg,
         rviz_arg,
+        joystick_arg,
         gazebo_launch,
         controller_launch,
+        teleop_launch,
         rviz_node,
     ])

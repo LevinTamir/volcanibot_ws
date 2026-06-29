@@ -1,0 +1,30 @@
+# Priority-based velocity-command arbitration.
+#
+# The DiffDriveController (volcanibot_controller) subscribes to the muxed
+# output topic volcanibot_controller/cmd_vel. twist_mux is launched with the
+# output remapped onto that topic (see teleop.launch.py).
+#
+# use_stamped: true -> twist_mux subscribes to and republishes
+# geometry_msgs/TwistStamped, matching joy_teleop's output and the
+# controller's use_stamped_vel:=true. Every velocity source below must
+# therefore publish TwistStamped.
+#
+# Higher priority wins while it is publishing within its timeout. Locks
+# override all topics: while a lock message is active, motion is blocked.
+twist_mux:
+  ros__parameters:
+    use_stamped: true
+    topics:
+      joystick:
+        topic: joy_vel        # joy_teleop output (manual driving)
+        timeout: 0.5
+        priority: 100
+      navigation:
+        topic: nav_vel        # autonomy (follow-person, nav) output
+        timeout: 0.5
+        priority: 50
+    locks:
+      safety_stop:
+        topic: safety_stop    # std_msgs/Bool latch; true == block all motion
+        timeout: 0.0
+        priority: 255

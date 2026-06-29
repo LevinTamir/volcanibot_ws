@@ -3,7 +3,10 @@ joy_teleop:
     move:
       type: topic
       interface_type: geometry_msgs/msg/TwistStamped
-      topic_name: volcanibot_controller/cmd_vel
+      # Publish to the twist_mux joystick input, not straight to the
+      # controller. twist_mux arbitrates joystick vs. autonomy (nav_vel)
+      # and forwards the winner to volcanibot_controller/cmd_vel.
+      topic_name: joy_vel
       deadman_buttons: [5]
       axis_mappings:
         twist-linear-x:

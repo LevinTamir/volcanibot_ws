@@ -42,8 +42,10 @@ def generate_launch_description():
         "camera",
         default_value="false",
         choices=["true", "false"],
-        description="Include the RGBD camera in the URDF. "
-                    "Note: no real-camera driver is launched yet (TODO).",
+        description="Include the RGBD camera in the URDF and launch the "
+                    "RealSense driver, remapped onto the sim camera topics "
+                    "(/camera/image, /camera/depth_image, /camera/camera_info, "
+                    "/camera/points).",
     )
 
     sensor_hostname_arg = DeclareLaunchArgument(
@@ -136,6 +138,32 @@ def generate_launch_description():
         parameters=[{"use_sim_time": LaunchConfiguration("use_sim_time")}],
     )
 
+    # Intel RealSense depth camera. Topics are remapped onto the same names
+    # the Gazebo RGBD plugin uses, so weed_3d_detector / YOLO are agnostic to
+    # whether they run against sim or real hardware. Depth is aligned to the
+    # color frame so 3D detections share the RGB optical frame.
+    realsense_camera = Node(
+        package="realsense2_camera",
+        executable="realsense2_camera_node",
+        name="camera",
+        namespace="camera",
+        output="screen",
+        parameters=[{
+            "enable_color": True,
+            "enable_depth": True,
+            "align_depth.enable": True,
+            "pointcloud.enable": True,
+            "use_sim_time": LaunchConfiguration("use_sim_time"),
+        }],
+        remappings=[
+            ("color/image_raw", "/camera/image"),
+            ("color/camera_info", "/camera/camera_info"),
+            ("aligned_depth_to_color/image_raw", "/camera/depth_image"),
+            ("depth/color/points", "/camera/points"),
+        ],
+        condition=IfCondition(LaunchConfiguration("camera")),
+    )
+
     # Command arbitration (twist_mux) + optional joystick. Muxes /joy_vel and
     # /nav_vel onto volcanibot_controller/cmd_vel by priority.
     teleop_launch = IncludeLaunchDescription(
@@ -188,6 +216,7 @@ def generate_launch_description():
         controller_manager,
         joint_state_broadcaster_spawner,
         volcanibot_controller_spawner,
+        realsense_camera,
         teleop_launch,
         rviz_node,
     ]

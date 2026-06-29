@@ -1,6 +1,13 @@
+# Shared diff-drive controller config for BOTH sim and the real robot.
+#   - sim:  loaded by the gz_ros2_control plugin (volcanibot_gazebo.xacro)
+#   - real: loaded by ros2_control_node (real_bringup.launch.py)
+#
+# Both are rear-driven: only the rear wheels are commanded; the front wheels are
+# chained to the rear and follow as URDF mimic joints (in sim gz_ros2_control
+# spins them, on the real robot they're mechanically chained).
 controller_manager:
   ros__parameters:
-    update_rate: 1000 # Match Gazebo's simulation period of 0.001 s
+    update_rate: 50
 
     volcanibot_controller:
       type: diff_drive_controller/DiffDriveController
@@ -8,17 +15,14 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    simple_velocity_controller:
-      type: velocity_controllers/JointGroupVelocityController
-
 volcanibot_controller:
   ros__parameters:
     type: diff_drive_controller/DiffDriveController
     use_stamped_vel: true
-    left_wheel_names: ["front_left_wheel_joint", "rear_left_wheel_joint"]
-    right_wheel_names: ["front_right_wheel_joint", "rear_right_wheel_joint"]
+    left_wheel_names: ["rear_left_wheel_joint"]
+    right_wheel_names: ["rear_right_wheel_joint"]
 
-    publish_rate: 50.0 # default: 50
+    publish_rate: 50.0
     pose_covariance_diagonal: [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]
     twist_covariance_diagonal: [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]
 
@@ -29,7 +33,7 @@ volcanibot_controller:
     left_wheel_radius_multiplier: 1.0
     right_wheel_radius_multiplier: 1.0
 
-    cmd_vel_timeout: 0.5
+    cmd_vel_timeout: 0.2
     base_frame_id: base_footprint
     publish_limited_velocity: true
     publish_wheel_data: true
@@ -41,8 +45,8 @@ volcanibot_controller:
         max_velocity: 2.0
         min_velocity: -2.0
         has_acceleration_limits: true
-        max_acceleration: 0.8
-        min_acceleration: -0.8
+        max_acceleration: 1.0
+        min_acceleration: -1.0
         has_jerk_limits: false
         max_jerk: 5.0
     angular:
@@ -50,6 +54,6 @@ volcanibot_controller:
         has_velocity_limits: true
         max_velocity: 1.7
         has_acceleration_limits: true
-        max_acceleration: 1.5
+        max_acceleration: 1.0
         has_jerk_limits: false
         max_jerk: 2.5

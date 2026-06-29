@@ -20,24 +20,24 @@
                 <param name="port">$(arg serial_port)</param>
                 <param name="baud_rate">$(arg baud_rate)</param>
                 <param name="timeout_ms">1000</param>
-                <param name="gear_ratio">1.0</param>
+                <param name="gear_ratio">10.0</param>
                 <!-- Encoder counts per WHEEL revolution (encoder PPR x quadrature
                      x gear). CALIBRATE: roll a wheel exactly one turn and read
                      the ?C count delta. Flip a sign if counts decrease when the
                      wheel drives forward. -->
                 <param name="counts_per_rev">10024.0</param>
-                <param name="left_encoder_sign">-1.0</param>
+                <param name="left_encoder_sign">-1.0</param>   <!-- left motor mirror-mounted: counts invert for forward -->
                 <param name="right_encoder_sign">1.0</param>
                 <param name="left_wheel_name">rear_left_wheel_joint</param>
                 <param name="right_wheel_name">rear_right_wheel_joint</param>
             </xacro:unless>
         </hardware>
 
-        <!-- In sim, all 4 wheels are independently controlled by Gazebo (the
-             physics engine doesn't support URDF mimic joints). On the real
-             robot only the rear wheels are motorized; the front wheels are
-             mechanically chained to the rear and so are not exposed to
-             ros2_control. -->
+        <!-- Both sim and real are rear-driven (same controllers config). The
+             front wheels are chained to the rear: on the real robot they have no
+             actuator and aren't exposed to ros2_control; in sim they are
+             declared below as state-only mimic joints so gz_ros2_control spins
+             them off the rear (the URDF <mimic> tags drive the constraint). -->
         <joint name="rear_left_wheel_joint">
             <command_interface name="velocity">
               <param name="min">-10</param>
@@ -56,21 +56,15 @@
             <state_interface name="velocity" />
         </joint>
 
+        <!-- Mimic joints: no command interface (driven by the URDF <mimic>
+             constraint off the rear wheels), state-only so they publish. -->
         <xacro:if value="$(arg use_sim)">
             <joint name="front_left_wheel_joint">
-                <command_interface name="velocity">
-                  <param name="min">-10</param>
-                  <param name="max">10</param>
-                </command_interface>
                 <state_interface name="position" />
                 <state_interface name="velocity" />
             </joint>
 
             <joint name="front_right_wheel_joint">
-                <command_interface name="velocity">
-                  <param name="min">-10</param>
-                  <param name="max">10</param>
-                </command_interface>
                 <state_interface name="position" />
                 <state_interface name="velocity" />
             </joint>

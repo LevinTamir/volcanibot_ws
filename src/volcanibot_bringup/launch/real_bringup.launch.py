@@ -148,7 +148,7 @@ def generate_launch_description():
         parameters=[
             {"robot_description": robot_description_content},
             os.path.join(
-                volcanibot_controller_share, "config", "volcanibot_controllers_real.yaml"),
+                volcanibot_controller_share, "config", "volcanibot_controllers.yaml"),
             {"use_sim_time": LaunchConfiguration("use_sim_time")},
         ],
         output="screen",

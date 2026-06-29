@@ -188,12 +188,11 @@
       link="front_left_wheel_link" />
     <axis
       xyz="0 1 0" />
-    <!-- Real robot: front wheel is chained to the rear and has no actuator.
-         Mimic lets robot_state_publisher derive its TF from the rear joint.
-         Sim drives all 4 wheels directly (gz physics ignores mimic). -->
-    <xacro:unless value="$(arg use_sim)">
-      <mimic joint="rear_left_wheel_joint" multiplier="1.0" offset="0.0"/>
-    </xacro:unless>
+    <!-- Front wheel is chained to the rear with no actuator of its own, so it
+         mimics the rear joint. On the real robot this lets robot_state_publisher
+         derive the front TF; in sim gz_ros2_control drives the front wheel off
+         the rear so the robot is rear-driven like the real one. -->
+    <mimic joint="rear_left_wheel_joint" multiplier="1.0" offset="0.0"/>
   </joint>
 
   <link name="front_right_wheel_link">
@@ -236,9 +235,7 @@
       link="front_right_wheel_link" />
     <axis
       xyz="0 1 0" />
-    <xacro:unless value="$(arg use_sim)">
-      <mimic joint="rear_right_wheel_joint" multiplier="1.0" offset="0.0"/>
-    </xacro:unless>
+    <mimic joint="rear_right_wheel_joint" multiplier="1.0" offset="0.0"/>
   </joint>
 
   <!-- Optional RGBD camera -->

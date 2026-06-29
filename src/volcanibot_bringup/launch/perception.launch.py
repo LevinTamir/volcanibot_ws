@@ -47,6 +47,20 @@ def generate_launch_description():
         description="TF frame the 3D detections are transformed into.",
     )
 
+    follow_arg = DeclareLaunchArgument(
+        "follow",
+        default_value="false",
+        choices=["true", "false"],
+        description="Run the person-following node (consumes /yolo/detections_3d, "
+                    "outputs /nav_vel). Requires yolo:=true.",
+    )
+
+    follow_toggle_button_arg = DeclareLaunchArgument(
+        "follow_toggle_button",
+        default_value="4",
+        description="Joystick button index that toggles person-following.",
+    )
+
     yolo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
@@ -64,10 +78,25 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration("yolo")),
     )
 
+    follow_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory("volcanibot_follow_person"),
+                "launch", "follow_person.launch.py")
+        ),
+        launch_arguments={
+            "toggle_button": LaunchConfiguration("follow_toggle_button"),
+        }.items(),
+        condition=IfCondition(LaunchConfiguration("follow")),
+    )
+
     return LaunchDescription([
         yolo_arg,
         yolo_model_arg,
         yolo_device_arg,
         yolo_target_frame_arg,
+        follow_arg,
+        follow_toggle_button_arg,
         yolo_launch,
+        follow_launch,
     ])

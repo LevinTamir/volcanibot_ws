@@ -63,6 +63,13 @@ def generate_launch_description():
         description="YOLO inference device (use cpu on a CPU-only dev machine).",
     )
 
+    follow_arg = DeclareLaunchArgument(
+        "follow",
+        default_value="false",
+        choices=["true", "false"],
+        description="Run person-following (needs yolo:=true and camera:=true).",
+    )
+
     volcanibot_description_share = get_package_share_directory("volcanibot_description")
     volcanibot_controller_share = get_package_share_directory("volcanibot_controller")
     volcanibot_bringup_share = get_package_share_directory("volcanibot_bringup")
@@ -102,6 +109,7 @@ def generate_launch_description():
         launch_arguments=[
             ("yolo", LaunchConfiguration("yolo")),
             ("yolo_device", LaunchConfiguration("yolo_device")),
+            ("follow", LaunchConfiguration("follow")),
         ],
     )
 
@@ -127,6 +135,7 @@ def generate_launch_description():
         joystick_arg,
         yolo_arg,
         yolo_device_arg,
+        follow_arg,
         gazebo_launch,
         controller_launch,
         teleop_launch,

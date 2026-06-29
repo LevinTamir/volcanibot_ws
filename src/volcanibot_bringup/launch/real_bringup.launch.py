@@ -94,6 +94,13 @@ def generate_launch_description():
         description="YOLO weights; absolute path or a rebuilt .engine for field use.",
     )
 
+    follow_arg = DeclareLaunchArgument(
+        "follow",
+        default_value="false",
+        choices=["true", "false"],
+        description="Run person-following (needs yolo:=true and camera:=true).",
+    )
+
     volcanibot_description_share = get_package_share_directory("volcanibot_description")
     volcanibot_controller_share = get_package_share_directory("volcanibot_controller")
     volcanibot_bringup_share = get_package_share_directory("volcanibot_bringup")
@@ -205,6 +212,7 @@ def generate_launch_description():
             ("yolo", LaunchConfiguration("yolo")),
             ("yolo_device", LaunchConfiguration("yolo_device")),
             ("yolo_model", LaunchConfiguration("yolo_model")),
+            ("follow", LaunchConfiguration("follow")),
         ],
     )
 
@@ -247,6 +255,7 @@ def generate_launch_description():
         yolo_arg,
         yolo_device_arg,
         yolo_model_arg,
+        follow_arg,
         robot_state_publisher,
         controller_manager,
         joint_state_broadcaster_spawner,

@@ -51,6 +51,11 @@ hardware_interface::CallbackReturn RoboteqDiffDriveSystem::on_init(
   cfg_.gear_ratio = std::stod(param_or(info_, "gear_ratio", std::to_string(cfg_.gear_ratio)));
   cfg_.counts_per_rev =
     std::stod(param_or(info_, "counts_per_rev", std::to_string(cfg_.counts_per_rev)));
+  // Per-wheel overrides fall back to the shared counts_per_rev when unset.
+  cfg_.left_counts_per_rev = std::stod(
+    param_or(info_, "left_counts_per_rev", std::to_string(cfg_.counts_per_rev)));
+  cfg_.right_counts_per_rev = std::stod(
+    param_or(info_, "right_counts_per_rev", std::to_string(cfg_.counts_per_rev)));
   cfg_.left_encoder_sign =
     std::stod(param_or(info_, "left_encoder_sign", std::to_string(cfg_.left_encoder_sign)));
   cfg_.right_encoder_sign =
@@ -58,11 +63,12 @@ hardware_interface::CallbackReturn RoboteqDiffDriveSystem::on_init(
   cfg_.left_wheel_name = param_or(info_, "left_wheel_name", cfg_.left_wheel_name);
   cfg_.right_wheel_name = param_or(info_, "right_wheel_name", cfg_.right_wheel_name);
 
-  if (cfg_.counts_per_rev <= 0.0)
+  if (cfg_.left_counts_per_rev <= 0.0 || cfg_.right_counts_per_rev <= 0.0)
   {
     RCLCPP_FATAL(
       rclcpp::get_logger("RoboteqDiffDriveSystem"),
-      "counts_per_rev must be > 0, got %f", cfg_.counts_per_rev);
+      "counts_per_rev must be > 0 (left=%f right=%f)",
+      cfg_.left_counts_per_rev, cfg_.right_counts_per_rev);
     return hardware_interface::CallbackReturn::ERROR;
   }
 
@@ -137,8 +143,9 @@ hardware_interface::CallbackReturn RoboteqDiffDriveSystem::on_configure(
 {
   RCLCPP_INFO(
     rclcpp::get_logger("RoboteqDiffDriveSystem"),
-    "Opening Roboteq on %s @ %d baud (gear_ratio=%.4f, counts_per_rev=%.1f)",
-    cfg_.port.c_str(), cfg_.baud_rate, cfg_.gear_ratio, cfg_.counts_per_rev);
+    "Opening Roboteq on %s @ %d baud (gear_ratio=%.4f, counts_per_rev L=%.1f R=%.1f)",
+    cfg_.port.c_str(), cfg_.baud_rate, cfg_.gear_ratio,
+    cfg_.left_counts_per_rev, cfg_.right_counts_per_rev);
 
   if (!comm_.connect(cfg_.port, cfg_.baud_rate, cfg_.timeout_ms))
   {
@@ -197,11 +204,10 @@ hardware_interface::return_type RoboteqDiffDriveSystem::read(
     return hardware_interface::return_type::OK;
   }
 
-  const double rad_per_count = kTwoPi / cfg_.counts_per_rev;
-  const double left_delta =
-    cfg_.left_encoder_sign * static_cast<double>(left_count - left_count_prev_) * rad_per_count;
-  const double right_delta =
-    cfg_.right_encoder_sign * static_cast<double>(right_count - right_count_prev_) * rad_per_count;
+  const double left_delta = cfg_.left_encoder_sign *
+    static_cast<double>(left_count - left_count_prev_) * kTwoPi / cfg_.left_counts_per_rev;
+  const double right_delta = cfg_.right_encoder_sign *
+    static_cast<double>(right_count - right_count_prev_) * kTwoPi / cfg_.right_counts_per_rev;
 
   left_position_ += left_delta;
   right_position_ += right_delta;

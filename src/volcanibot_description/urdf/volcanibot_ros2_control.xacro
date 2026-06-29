@@ -21,11 +21,12 @@
                 <param name="baud_rate">$(arg baud_rate)</param>
                 <param name="timeout_ms">1000</param>
                 <param name="gear_ratio">10.0</param>
-                <!-- Encoder counts per WHEEL revolution (encoder PPR x quadrature
-                     x gear). CALIBRATE: roll a wheel exactly one turn and read
-                     the ?C count delta. Flip a sign if counts decrease when the
-                     wheel drives forward. -->
-                <param name="counts_per_rev">10024.0</param>
+                <!-- Encoder counts per WHEEL revolution, per wheel (CALIBRATE).
+                     Measured by counting full wheel turns vs the ?C delta; the
+                     two channels read differently so they are set separately.
+                     Flip a sign if counts decrease when the wheel drives forward. -->
+                <param name="left_counts_per_rev">850135.0</param>
+                <param name="right_counts_per_rev">953675.0</param>
                 <param name="left_encoder_sign">-1.0</param>   <!-- left motor mirror-mounted: counts invert for forward -->
                 <param name="right_encoder_sign">1.0</param>
                 <param name="left_wheel_name">rear_left_wheel_joint</param>

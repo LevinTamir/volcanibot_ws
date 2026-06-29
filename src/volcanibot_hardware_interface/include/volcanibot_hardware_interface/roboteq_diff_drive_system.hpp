@@ -41,7 +41,12 @@ public:
     int baud_rate = 115200;
     int timeout_ms = 1000;
     double gear_ratio = 1.0;        // motor : wheel, used for the velocity command path
-    double counts_per_rev = 1024.0; // encoder counts per WHEEL revolution (CALIBRATE)
+    // Encoder counts per WHEEL revolution (CALIBRATE). counts_per_rev is the
+    // shared default; left_/right_counts_per_rev override per wheel when the two
+    // channels read differently. Resolved in on_init.
+    double counts_per_rev = 1024.0;
+    double left_counts_per_rev = 0.0;   // <=0 -> falls back to counts_per_rev
+    double right_counts_per_rev = 0.0;
     double left_encoder_sign = 1.0;   // flip to -1.0 if counts decrease when the wheel drives forward
     double right_encoder_sign = 1.0;
     std::string left_wheel_name = "left_wheel_joint";

@@ -56,41 +56,57 @@ to drive with the joystick; it overrides autonomy.
 
 Camera topics are the same in sim and on the real robot (`/camera/image`,
 `/camera/depth_image`, `/camera/camera_info`, `/camera/points`), so the YOLO
-perception layer doesn't care which one is running.
+perception layer does not care which one is running.
 
 ## Setup on a new PC
 
+Clone the workspace:
+
 ```bash
-# 1. Clone
 mkdir -p ~/workspaces && cd ~/workspaces
 git clone <this-repo-url> volcanibot_ws
 cd volcanibot_ws
+```
 
-# 2. Pull the third-party packages (yolo_ros, trimble_driver_ros)
+Pull the third-party packages (yolo_ros, trimble_driver_ros):
+
+```bash
 sudo apt install python3-vcstool
 vcs import src < volcanibot.repos
+```
 
-# 3. System / ROS dependencies (installs ouster, realsense, robot_localization,
-#    geographiclib, libpcap, boost, ... via apt)
+Install the system / ROS dependencies (ouster, realsense, robot_localization,
+geographiclib, libpcap, boost, and so on):
+
+```bash
 source /opt/ros/jazzy/setup.bash
 rosdep install --from-paths src --ignore-src -r -y
+```
 
-# 4. Python deps for YOLO / person-following, in a conda env
+Create a conda env and install the Python deps for YOLO / person-following:
+
+```bash
 conda create -n volcanibot python=3.12
 conda activate volcanibot
 pip install -r requirements.txt
-# torch: install a CUDA-matched build for your machine (NVIDIA wheel on the Jetson).
-# opencv comes from ROS (python3-opencv) — do NOT pip install opencv-python.
+```
 
-# 5. Build
+Note on `torch` and `opencv`:
+
+- `torch`: install a CUDA-matched build for your machine (the NVIDIA wheel on the Jetson).
+- `opencv`: comes from ROS (`python3-opencv`). Do not `pip install opencv-python`.
+
+Build and source:
+
+```bash
 colcon build --symlink-install
 source install/setup.bash
 ```
 
-### Real robot — udev rule for the Roboteq
+### Real robot: udev rule for the Roboteq
 
 The hardware interface expects the Roboteq at the stable symlink `/dev/roboteq`.
-Plug in the controller and run the installer once — it detects the device and
+Plug in the controller and run the installer once. It detects the device and
 writes the udev rule:
 
 ```bash
@@ -115,10 +131,10 @@ Useful args (all default off unless noted):
 | `rviz` | `true` | Open RViz with the default config |
 | `joystick` | `true` | Launch joystick + joy_teleop (set `false` if no gamepad) |
 | `yolo` | `false` | Run YOLO detection on the camera stream (needs `camera:=true`) |
-| `yolo_device` | `cuda:0` | Inference device — use `cpu` on a machine without a GPU |
+| `yolo_device` | `cuda:0` | Inference device. Use `cpu` on a machine without a GPU |
 | `follow` | `false` | Run person-following (needs `yolo:=true`) |
 
-Example — full perception demo on a CPU laptop:
+Example, full perception demo on a CPU laptop:
 
 ```bash
 ros2 launch volcanibot_bringup sim_bringup.launch.py camera:=true yolo:=true follow:=true yolo_device:=cpu
@@ -141,7 +157,7 @@ Useful args:
 | `joystick` | `true` | Launch joystick + joy_teleop |
 | `yolo` | `false` | Run YOLO detection (needs `camera:=true`) |
 | `yolo_device` | `cuda:0` | Inference device (`cuda:0` on the Jetson) |
-| `yolo_model` | `yolov8n.pt` | Weights; absolute path or a rebuilt `.engine` for the field |
+| `yolo_model` | `yolov8n.pt` | Weights: absolute path or a rebuilt `.engine` for the field |
 | `follow` | `false` | Run person-following (needs `yolo:=true`) |
 | `serial_port` | `/dev/roboteq` | Roboteq serial device |
 | `baud_rate` | `115200` | Roboteq baud rate |
@@ -157,11 +173,18 @@ Useful args:
 For hardware bring-up there are two standalone serial tools in
 `src/volcanibot_hardware_interface/scripts/` (`test_roboteq.py`,
 `interactive_roboteq.py`). They send motor commands directly, so they are
-**bench-only** — see the README in that folder before using them.
+**bench-only**. See the README in that folder before using them.
 
 ## Updating third-party packages
 
+Pull the latest on each third-party repo:
+
 ```bash
-vcs pull src                                   # pull latest on each third-party repo
-vcs export src --exact > volcanibot.repos      # refresh the pinned versions
+vcs pull src
+```
+
+Refresh the pinned versions in `volcanibot.repos`:
+
+```bash
+vcs export src --exact > volcanibot.repos
 ```

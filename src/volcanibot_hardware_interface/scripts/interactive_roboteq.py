@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Interactive Roboteq console — type raw commands, read responses.
+"""Interactive Roboteq console - type raw commands, read responses.
 
 ⚠️  BENCH-ONLY. This SENDS MOTOR COMMANDS directly to the Roboteq, bypassing
 ros2_control and all safety arbitration (twist_mux / deadman). Only run it on a

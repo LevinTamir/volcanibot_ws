@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Roboteq quick test — sends a short motor command sequence over serial.
+"""Roboteq quick test - sends a short motor command sequence over serial.
 
 ⚠️  BENCH-ONLY. This SENDS MOTOR COMMANDS directly to the Roboteq, bypassing
 ros2_control and all safety arbitration (twist_mux / deadman). Only run it on a

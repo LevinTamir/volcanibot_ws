@@ -83,7 +83,7 @@ class PersonTargetNode(Node):
         self.create_timer(0.05, self._control_loop)  # 20 Hz velocity commands
         self.create_timer(1.0,  self._publish_state) # 1 Hz state broadcast
 
-        self.get_logger().info(f"PersonTargetNode ready — press button {self._button} (LB) to toggle tracking")
+        self.get_logger().info(f"PersonTargetNode ready - press button {self._button} (LB) to toggle tracking")
 
     def _joy_cb(self, msg: Joy):
         buttons = list(msg.buttons)
@@ -137,7 +137,7 @@ class PersonTargetNode(Node):
                 self._last_pos      = pt
                 self._last_pos_time = now
             elif now - self._last_seen > self._lost_timeout:
-                self.get_logger().warn(f"Person '{self._locked_id}' lost — resuming search")
+                self.get_logger().warn(f"Person '{self._locked_id}' lost - resuming search")
                 self._locked_id = None
                 self._last_pos  = None
                 self._last_pos_time = None
@@ -180,7 +180,7 @@ class PersonTargetNode(Node):
         t = min(1.0, (dist - self._min_dist) / (self._max_dist - self._min_dist))
         linear_x = -t * self._max_linear  # negative = drive backward toward person
 
-        # Angular velocity — EMA-filtered PID with deadband
+        # Angular velocity - EMA-filtered PID with deadband
         raw_error = math.atan2(y, x)
         self._ang_filtered_error = (
             self._ang_alpha * raw_error
@@ -218,7 +218,7 @@ class PersonTargetNode(Node):
             self._ang_prev_error     = 0.0
             self._ang_filtered_error = 0.0
             self._prev_time          = None
-        self.get_logger().info(f"State → {state}")
+        self.get_logger().info(f"State -> {state}")
 
     def _publish_state(self):
         msg = String()

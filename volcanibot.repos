@@ -2,7 +2,7 @@
 #
 #     vcs import src < volcanibot.repos
 #
-# These are NOT committed to this workspace (see .gitignore) — they have their
+# These are NOT committed to this workspace (see .gitignore) - they have their
 # own upstreams and are pinned here by commit. Re-run the import after cloning
 # this repo and before colcon build.
 #

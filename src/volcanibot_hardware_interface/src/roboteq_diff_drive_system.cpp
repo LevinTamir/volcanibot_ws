@@ -149,7 +149,7 @@ hardware_interface::CallbackReturn RoboteqDiffDriveSystem::on_activate(
 {
   left_cmd_vel_ = right_cmd_vel_ = 0.0;
   left_velocity_ = right_velocity_ = 0.0;
-  // Don't reset position — keep odometry continuous across activate cycles.
+  // Don't reset position - keep odometry continuous across activate cycles.
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
@@ -169,7 +169,7 @@ hardware_interface::return_type RoboteqDiffDriveSystem::read(
   double left_rpm = 0.0, right_rpm = 0.0;
   if (!comm_.read_rpm(left_rpm, right_rpm))
   {
-    // Don't error out on a single bad read — keep last-known velocity and
+    // Don't error out on a single bad read - keep last-known velocity and
     // integrate position from it, so controller_manager keeps cycling.
     return hardware_interface::return_type::OK;
   }

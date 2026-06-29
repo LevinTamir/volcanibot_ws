@@ -25,8 +25,8 @@
                      x gear). CALIBRATE: roll a wheel exactly one turn and read
                      the ?C count delta. Flip a sign if counts decrease when the
                      wheel drives forward. -->
-                <param name="counts_per_rev">1024.0</param>
-                <param name="left_encoder_sign">1.0</param>
+                <param name="counts_per_rev">10024.0</param>
+                <param name="left_encoder_sign">-1.0</param>
                 <param name="right_encoder_sign">1.0</param>
                 <param name="left_wheel_name">rear_left_wheel_joint</param>
                 <param name="right_wheel_name">rear_right_wheel_joint</param>

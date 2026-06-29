@@ -2,10 +2,13 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>volcanibot_follow_person</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="omributnaru8@gmail.com">volcani</maintainer>
-  <license>TODO: License declaration</license>
+  <version>0.0.1</version>
+  <description>Person-following behaviour for Volcanibot: locks onto the closest
+    person from /yolo/detections_3d and drives toward them via /nav_vel
+    (arbitrated through twist_mux). Toggled by a joystick button.</description>
+  <maintainer email="tamirlvn@gmail.com">Tamir Levin</maintainer>
+  <author email="omributnaru8@gmail.com">Omri (original author)</author>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>ament_cmake_python</buildtool_depend>

@@ -2,10 +2,11 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>volcanibot_controller</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="tamirlvn@gmail.com">tamir</maintainer>
-  <license>TODO: License declaration</license>
+  <version>0.0.1</version>
+  <description>Controller configs and teleop for Volcanibot: diff_drive_controller
+    parameters (sim + real), joystick teleop, and twist_mux command arbitration.</description>
+  <maintainer email="tamirlvn@gmail.com">Tamir Levin</maintainer>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

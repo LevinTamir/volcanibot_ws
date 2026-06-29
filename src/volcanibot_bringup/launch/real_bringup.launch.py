@@ -175,8 +175,8 @@ def generate_launch_description():
     )
 
     # Intel RealSense depth camera. Topics are remapped onto the same names
-    # the Gazebo RGBD plugin uses, so weed_3d_detector / YOLO are agnostic to
-    # whether they run against sim or real hardware. Depth is aligned to the
+    # the Gazebo RGBD plugin uses, so the YOLO perception layer is agnostic to
+    # whether it runs against sim or real hardware. Depth is aligned to the
     # color frame so 3D detections share the RGB optical frame.
     realsense_camera = Node(
         package="realsense2_camera",

@@ -7,13 +7,15 @@ joy_teleop:
       # controller. twist_mux arbitrates joystick vs. autonomy (nav_vel)
       # and forwards the winner to volcanibot_controller/cmd_vel.
       topic_name: joy_vel
-      deadman_buttons: [5]
+      deadman_buttons: [5]   # RB on an Xbox pad
+      # Xbox X|S pad. Forward/back on axis 0, turn on axis 4.
+      # Flip a scale sign if a direction is reversed (`ros2 topic echo /joy`).
       axis_mappings:
         twist-linear-x:
-          axis: 1
-          scale: 2.0
+          axis: 0          # forward/back
+          scale: -2.0
           offset: 0.0
         twist-angular-z:
-          axis: 3
+          axis: 4          # turn left/right
           scale: 1.7
           offset: 0.0

@@ -1,0 +1,14 @@
+# Pure-pip Python dependencies for VolcaniBot nodes.
+# NOTE: ROS dependencies (rclpy, cv_bridge, sensor_msgs, tf2_ros, xacro,
+# message_filters, etc.) are handled by rosdep via each package's package.xml,
+# NOT here. See README for the full setup steps.
+
+ultralytics>=8.0.0
+numpy
+pyserial
+
+# torch is intentionally omitted: install a CUDA-matched build for your machine
+# (ultralytics will pull a torch if none is present, but it may be CPU-only).
+# On the Jetson, use the NVIDIA-provided torch wheel.
+# opencv (cv2) is intentionally omitted: it comes from ROS/apt (python3-opencv)
+# to stay binary-compatible with cv_bridge. Do NOT pip install opencv-python.

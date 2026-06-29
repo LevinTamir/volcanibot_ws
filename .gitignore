@@ -2,3 +2,8 @@ install/
 log/
 build/
 .vscode/
+
+# External packages imported via vcstool (see volcanibot.repos).
+# Tracked by their own upstreams, not committed here.
+/src/yolo_ros/
+/src/trimble_driver_ros/

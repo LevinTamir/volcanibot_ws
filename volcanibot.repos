@@ -1,0 +1,16 @@
+# External (third-party) ROS 2 packages, pulled into src/ with vcstool:
+#
+#     vcs import src < volcanibot.repos
+#
+# These are NOT committed to this workspace (see .gitignore) — they have their
+# own upstreams and are pinned here by commit. Re-run the import after cloning
+# this repo and before colcon build.
+#
+# yolo_ros is pinned to omribu's fork (not upstream mgonzs13/yolo_ros) because
+# that commit strips `uv sync` from the launch files, which is required on the
+# Jetson. trimble_driver_ros tracks the official trimble-oss upstream.
+repositories:
+  yolo_ros:
+    type: git
+    url: https://github.com/omribu/yolo_ros.git
+    version: e6e71097b76a55603e52db4e94683f11490267a1

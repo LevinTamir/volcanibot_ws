@@ -50,8 +50,22 @@ def generate_launch_description():
         description="Launch the joystick driver + joy_teleop (publishes /joy_vel).",
     )
 
+    yolo_arg = DeclareLaunchArgument(
+        "yolo",
+        default_value="false",
+        choices=["true", "false"],
+        description="Run YOLO detection on the camera stream (needs camera:=true).",
+    )
+
+    yolo_device_arg = DeclareLaunchArgument(
+        "yolo_device",
+        default_value="cuda:0",
+        description="YOLO inference device (use cpu on a CPU-only dev machine).",
+    )
+
     volcanibot_description_share = get_package_share_directory("volcanibot_description")
     volcanibot_controller_share = get_package_share_directory("volcanibot_controller")
+    volcanibot_bringup_share = get_package_share_directory("volcanibot_bringup")
 
     gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -81,6 +95,16 @@ def generate_launch_description():
         ],
     )
 
+    perception_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(volcanibot_bringup_share, "launch", "perception.launch.py")
+        ),
+        launch_arguments=[
+            ("yolo", LaunchConfiguration("yolo")),
+            ("yolo_device", LaunchConfiguration("yolo_device")),
+        ],
+    )
+
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -101,8 +125,11 @@ def generate_launch_description():
         camera_arg,
         rviz_arg,
         joystick_arg,
+        yolo_arg,
+        yolo_device_arg,
         gazebo_launch,
         controller_launch,
         teleop_launch,
+        perception_launch,
         rviz_node,
     ])

@@ -75,8 +75,28 @@ def generate_launch_description():
         description="Launch the joystick driver + joy_teleop (publishes /joy_vel).",
     )
 
+    yolo_arg = DeclareLaunchArgument(
+        "yolo",
+        default_value="false",
+        choices=["true", "false"],
+        description="Run YOLO detection on the camera stream (needs camera:=true).",
+    )
+
+    yolo_device_arg = DeclareLaunchArgument(
+        "yolo_device",
+        default_value="cuda:0",
+        description="YOLO inference device (cuda:0 on the Jetson, cpu otherwise).",
+    )
+
+    yolo_model_arg = DeclareLaunchArgument(
+        "yolo_model",
+        default_value="yolov8n.pt",
+        description="YOLO weights; absolute path or a rebuilt .engine for field use.",
+    )
+
     volcanibot_description_share = get_package_share_directory("volcanibot_description")
     volcanibot_controller_share = get_package_share_directory("volcanibot_controller")
+    volcanibot_bringup_share = get_package_share_directory("volcanibot_bringup")
 
     robot_description_content = ParameterValue(
         Command([
@@ -176,6 +196,18 @@ def generate_launch_description():
         ],
     )
 
+    # Optional YOLO perception on the camera stream (/yolo/detections_3d).
+    perception_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(volcanibot_bringup_share, "launch", "perception.launch.py")
+        ),
+        launch_arguments=[
+            ("yolo", LaunchConfiguration("yolo")),
+            ("yolo_device", LaunchConfiguration("yolo_device")),
+            ("yolo_model", LaunchConfiguration("yolo_model")),
+        ],
+    )
+
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -212,12 +244,16 @@ def generate_launch_description():
         ouster_params_file_arg,
         rviz_arg,
         joystick_arg,
+        yolo_arg,
+        yolo_device_arg,
+        yolo_model_arg,
         robot_state_publisher,
         controller_manager,
         joint_state_broadcaster_spawner,
         volcanibot_controller_spawner,
         realsense_camera,
         teleop_launch,
+        perception_launch,
         rviz_node,
     ]
     if ouster_driver is not None:

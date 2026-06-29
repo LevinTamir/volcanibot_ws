@@ -105,6 +105,20 @@ public:
     return true;
   }
 
+  // Read absolute encoder counters via Roboteq's ?C query. Response format:
+  // "C=<ch1>:<ch2>\r", counts are signed 32-bit. Channel 1 -> left, 2 -> right.
+  bool read_counts(long & left_count, long & right_count)
+  {
+    const std::string response = send_msg("?C\r");
+    if (response.empty()) return false;
+
+    long ch1 = 0, ch2 = 0;
+    if (std::sscanf(response.c_str(), "C=%ld:%ld", &ch1, &ch2) != 2) return false;
+    left_count = ch1;
+    right_count = ch2;
+    return true;
+  }
+
 private:
   LibSerial::SerialPort serial_;
   int timeout_ms_ = 1000;

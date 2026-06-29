@@ -24,11 +24,6 @@ double rad_per_sec_to_rpm(double rad_per_sec, double gear_ratio)
   return rad_per_sec * 60.0 / kTwoPi * gear_ratio;
 }
 
-double rpm_to_rad_per_sec(double rpm, double gear_ratio)
-{
-  return rpm * kTwoPi / 60.0 / gear_ratio;
-}
-
 std::string param_or(
   const hardware_interface::HardwareInfo & info, const std::string & key,
   const std::string & fallback)
@@ -54,8 +49,22 @@ hardware_interface::CallbackReturn RoboteqDiffDriveSystem::on_init(
   cfg_.baud_rate = std::stoi(param_or(info_, "baud_rate", std::to_string(cfg_.baud_rate)));
   cfg_.timeout_ms = std::stoi(param_or(info_, "timeout_ms", std::to_string(cfg_.timeout_ms)));
   cfg_.gear_ratio = std::stod(param_or(info_, "gear_ratio", std::to_string(cfg_.gear_ratio)));
+  cfg_.counts_per_rev =
+    std::stod(param_or(info_, "counts_per_rev", std::to_string(cfg_.counts_per_rev)));
+  cfg_.left_encoder_sign =
+    std::stod(param_or(info_, "left_encoder_sign", std::to_string(cfg_.left_encoder_sign)));
+  cfg_.right_encoder_sign =
+    std::stod(param_or(info_, "right_encoder_sign", std::to_string(cfg_.right_encoder_sign)));
   cfg_.left_wheel_name = param_or(info_, "left_wheel_name", cfg_.left_wheel_name);
   cfg_.right_wheel_name = param_or(info_, "right_wheel_name", cfg_.right_wheel_name);
+
+  if (cfg_.counts_per_rev <= 0.0)
+  {
+    RCLCPP_FATAL(
+      rclcpp::get_logger("RoboteqDiffDriveSystem"),
+      "counts_per_rev must be > 0, got %f", cfg_.counts_per_rev);
+    return hardware_interface::CallbackReturn::ERROR;
+  }
 
   if (info_.joints.size() != 2)
   {
@@ -128,7 +137,8 @@ hardware_interface::CallbackReturn RoboteqDiffDriveSystem::on_configure(
 {
   RCLCPP_INFO(
     rclcpp::get_logger("RoboteqDiffDriveSystem"),
-    "Opening Roboteq on %s @ %d baud", cfg_.port.c_str(), cfg_.baud_rate);
+    "Opening Roboteq on %s @ %d baud (gear_ratio=%.4f, counts_per_rev=%.1f)",
+    cfg_.port.c_str(), cfg_.baud_rate, cfg_.gear_ratio, cfg_.counts_per_rev);
 
   if (!comm_.connect(cfg_.port, cfg_.baud_rate, cfg_.timeout_ms))
   {
@@ -150,6 +160,9 @@ hardware_interface::CallbackReturn RoboteqDiffDriveSystem::on_activate(
   left_cmd_vel_ = right_cmd_vel_ = 0.0;
   left_velocity_ = right_velocity_ = 0.0;
   // Don't reset position - keep odometry continuous across activate cycles.
+  // Re-baseline the encoder counters on the next read so re-activation doesn't
+  // produce a spurious position jump from the absolute counter.
+  encoder_initialized_ = false;
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
@@ -166,18 +179,42 @@ hardware_interface::return_type RoboteqDiffDriveSystem::read(
 {
   if (!comm_.connected()) return hardware_interface::return_type::ERROR;
 
-  double left_rpm = 0.0, right_rpm = 0.0;
-  if (!comm_.read_rpm(left_rpm, right_rpm))
+  long left_count = 0, right_count = 0;
+  if (!comm_.read_counts(left_count, right_count))
   {
-    // Don't error out on a single bad read - keep last-known velocity and
-    // integrate position from it, so controller_manager keeps cycling.
+    // Don't error out on a single bad read - keep last-known state so
+    // controller_manager keeps cycling.
     return hardware_interface::return_type::OK;
   }
 
-  left_velocity_ = rpm_to_rad_per_sec(left_rpm, cfg_.gear_ratio);
-  right_velocity_ = rpm_to_rad_per_sec(right_rpm, cfg_.gear_ratio);
-  left_position_ += left_velocity_ * period.seconds();
-  right_position_ += right_velocity_ * period.seconds();
+  // First read after activation: baseline the raw counters, report zero motion.
+  if (!encoder_initialized_)
+  {
+    left_count_prev_ = left_count;
+    right_count_prev_ = right_count;
+    left_velocity_ = right_velocity_ = 0.0;
+    encoder_initialized_ = true;
+    return hardware_interface::return_type::OK;
+  }
+
+  const double rad_per_count = kTwoPi / cfg_.counts_per_rev;
+  const double left_delta =
+    cfg_.left_encoder_sign * static_cast<double>(left_count - left_count_prev_) * rad_per_count;
+  const double right_delta =
+    cfg_.right_encoder_sign * static_cast<double>(right_count - right_count_prev_) * rad_per_count;
+
+  left_position_ += left_delta;
+  right_position_ += right_delta;
+
+  const double dt = period.seconds();
+  if (dt > 0.0)
+  {
+    left_velocity_ = left_delta / dt;
+    right_velocity_ = right_delta / dt;
+  }
+
+  left_count_prev_ = left_count;
+  right_count_prev_ = right_count;
   return hardware_interface::return_type::OK;
 }
 

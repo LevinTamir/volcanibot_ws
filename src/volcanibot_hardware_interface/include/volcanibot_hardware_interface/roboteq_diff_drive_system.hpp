@@ -40,7 +40,10 @@ public:
     std::string port = "/dev/roboteq";
     int baud_rate = 115200;
     int timeout_ms = 1000;
-    double gear_ratio = 1.0;       // motor : wheel
+    double gear_ratio = 1.0;        // motor : wheel, used for the velocity command path
+    double counts_per_rev = 1024.0; // encoder counts per WHEEL revolution (CALIBRATE)
+    double left_encoder_sign = 1.0;   // flip to -1.0 if counts decrease when the wheel drives forward
+    double right_encoder_sign = 1.0;
     std::string left_wheel_name = "left_wheel_joint";
     std::string right_wheel_name = "right_wheel_joint";
   };
@@ -94,6 +97,12 @@ private:
   double right_position_ = 0.0;
   double left_velocity_ = 0.0;
   double right_velocity_ = 0.0;
+
+  // Encoder bookkeeping. Position is accumulated from count deltas; we baseline
+  // the raw counters on the first read after activation so position never jumps.
+  long left_count_prev_ = 0;
+  long right_count_prev_ = 0;
+  bool encoder_initialized_ = false;
 };
 
 }  // namespace volcanibot_hardware_interface

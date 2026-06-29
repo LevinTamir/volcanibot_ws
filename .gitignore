@@ -2,6 +2,8 @@ install/
 log/
 build/
 .vscode/
+__pycache__/
+*.pyc
 
 # External packages imported via vcstool (see volcanibot.repos).
 # Tracked by their own upstreams, not committed here.

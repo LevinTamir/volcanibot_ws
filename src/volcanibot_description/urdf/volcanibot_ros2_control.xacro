@@ -27,8 +27,8 @@
                      Flip a sign if counts decrease when the wheel drives forward. -->
                 <!-- Values mirror left<->right because the encoder channels are
                      swapped vs the motor channels (see roboteq_comms read_counts). -->
-                <param name="left_counts_per_rev">953675.0</param>
-                <param name="right_counts_per_rev">850135.0</param>
+                <param name="left_counts_per_rev">898176.0</param>
+                <param name="right_counts_per_rev">899502.0</param>
                 <param name="left_encoder_sign">1.0</param>
                 <param name="right_encoder_sign">-1.0</param>
                 <!-- Left motor is mirror-mounted (motors are symmetric), so a

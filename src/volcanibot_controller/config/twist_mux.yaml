@@ -17,11 +17,11 @@ twist_mux:
     topics:
       joystick:
         topic: joy_vel        # joy_teleop output (manual driving)
-        timeout: 0.5
+        timeout: 0.3
         priority: 100
       navigation:
         topic: nav_vel        # autonomy (follow-person, nav) output
-        timeout: 0.5
+        timeout: 0.3
         priority: 50
     locks:
       safety_stop:

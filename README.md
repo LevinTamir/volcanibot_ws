@@ -26,7 +26,7 @@ These are the packages developed in this repo:
 |---------|------------|
 | `volcanibot_bringup` | Top-level launch files for sim and real robot, plus GPS/perception sub-launches and configs |
 | `volcanibot_description` | URDF/xacro, meshes, Gazebo worlds, RViz config |
-| `volcanibot_controller` | diff_drive_controller params (sim + real), joystick teleop, twist_mux arbitration |
+| `volcanibot_controller` | diff_drive_controller params (sim + real), joystick and keyboard teleop, twist_mux arbitration |
 | `volcanibot_hardware_interface` | ros2_control hardware interface for the Roboteq motor controller (C++), udev rule, bench scripts |
 | `volcanibot_follow_person` | Person-following node: follows the closest person from YOLO detections |
 
@@ -139,6 +139,35 @@ Example, full perception demo on a CPU laptop:
 ```bash
 ros2 launch volcanibot_bringup sim_bringup.launch.py camera:=true yolo:=true follow:=true yolo_device:=cpu
 ```
+
+### Driving without a joystick (keyboard)
+
+Launch with `joystick:=false`, then run the keyboard teleop in its own
+terminal. It publishes `TwistStamped` on `/joy_vel`, so it goes through
+`twist_mux` at the same priority as the gamepad.
+
+```bash
+# simulation
+ros2 run volcanibot_controller keyboard_teleop.py --ros-args -p use_sim_time:=true
+# real robot
+ros2 run volcanibot_controller keyboard_teleop.py
+```
+
+| Key | Action |
+|-----|--------|
+| `W` / Up, `S` / Down | Forward / backward |
+| `A` / Left, `D` / Right | Turn left / right in place |
+| `Q` / `E` | Forward + left / forward + right |
+| `Space` / `X` | Stop now |
+| `+` / `-` | Both speeds up / down |
+| `]` / `[` and `}` / `{` | Linear only / angular only |
+
+Hold a key to drive; the robot stops about 0.15 s after release. The first
+press is held for 0.6 s to bridge the OS key-repeat delay, so motion is smooth
+from the start. After stopping, the node goes silent so lower-priority sources
+(`/nav_vel`) can take over again. Speeds, limits and timings are ROS
+parameters (`linear_speed`, `angular_speed`, `max_linear_speed`,
+`max_angular_speed`, `first_press_hold`, `repeat_hold`).
 
 ### Real robot
 

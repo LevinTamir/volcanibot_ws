@@ -26,8 +26,8 @@ These are the packages developed in this repo:
 |---------|------------|
 | `volcanibot_bringup` | Top-level launch files for sim and real robot, plus GPS/perception sub-launches and configs |
 | `volcanibot_description` | URDF/xacro, meshes, Gazebo worlds, RViz config |
-| `volcanibot_controller` | diff_drive_controller params (sim + real), joystick teleop, twist_mux arbitration |
-| `volcanibot_hardware_interface` | ros2_control hardware interface for the Roboteq motor controller (C++), udev rule, bench scripts |
+| `volcanibot_controller` | diff_drive_controller params (shared by sim and real), joystick teleop (Bluetooth/USB profiles), twist_mux arbitration |
+| `volcanibot_hardware_interface` | ros2_control hardware interface for the Roboteq motor controller (C++) with wheel-encoder odometry, udev rule, bench and calibration scripts |
 | `volcanibot_follow_person` | Person-following node: follows the closest person from YOLO detections |
 
 Third-party packages are **not** committed here. They are pulled into `src/`
@@ -130,6 +130,7 @@ Useful args (all default off unless noted):
 | `camera` | `false` | Spawn the RGBD camera and bridge `/camera/*` |
 | `rviz` | `true` | Open RViz with the default config |
 | `joystick` | `true` | Launch joystick + joy_teleop (set `false` if no gamepad) |
+| `joy_profile` | `bt` | Joystick mapping profile: `bt` (Bluetooth) or `usb`. The Xbox pad's axis/button indices differ between the two |
 | `yolo` | `false` | Run YOLO detection on the camera stream (needs `camera:=true`) |
 | `yolo_device` | `cuda:0` | Inference device. Use `cpu` on a machine without a GPU |
 | `follow` | `false` | Run person-following (needs `yolo:=true`) |
@@ -155,6 +156,7 @@ Useful args:
 | `gps` | `false` | Include the GPS antennas and launch the Trimble GSOF client + navsat |
 | `rviz` | `true` | Open RViz |
 | `joystick` | `true` | Launch joystick + joy_teleop |
+| `joy_profile` | `bt` | Joystick mapping profile: `bt` (Bluetooth) or `usb` |
 | `yolo` | `false` | Run YOLO detection (needs `camera:=true`) |
 | `yolo_device` | `cuda:0` | Inference device (`cuda:0` on the Jetson) |
 | `yolo_model` | `yolov8n.pt` | Weights: absolute path or a rebuilt `.engine` for the field |
@@ -166,7 +168,8 @@ Useful args:
 
 > Note: the GPS driver only builds after `rosdep install` has pulled its system
 > deps (geographiclib, libpcap, boost). The receiver IP/port live in
-> `src/volcanibot_bringup/config/gsof_client_params.yaml`.
+> `src/volcanibot_bringup/config/gsof_client_params.yaml`. For setting up the
+> Trimble receiver itself, see `docs/GPS_RTK_Configuration_Guide.pdf`.
 
 ### Roboteq bench scripts
 
@@ -174,6 +177,22 @@ For hardware bring-up there are two standalone serial tools in
 `src/volcanibot_hardware_interface/scripts/` (`test_roboteq.py`,
 `interactive_roboteq.py`). They send motor commands directly, so they are
 **bench-only**. See the README in that folder before using them.
+
+### Odometry calibration and visualization
+
+Two read-only helpers in the same `scripts/` folder run alongside
+`real_bringup` (they never publish velocity commands):
+
+- `calibrate_odom.py`: measures wheel revolutions, distance, and yaw between
+  two Enter presses while you drive with the joystick, then prints the
+  multiplier to apply to `counts_per_rev`, `wheel_radius`, or
+  `wheel_separation`.
+- `odom_path.py`: accumulates `/odom` poses into a `nav_msgs/Path` on
+  `/odom_path` so RViz can show the trail the robot made (Add -> Path,
+  Fixed Frame = `odom`).
+
+The calibrated per-wheel `counts_per_rev` values live in
+`src/volcanibot_description/urdf/volcanibot_ros2_control.xacro`.
 
 ## Updating third-party packages
 

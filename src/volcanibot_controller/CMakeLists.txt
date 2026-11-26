@@ -12,5 +12,6 @@ ament_package()
 
 install(PROGRAMS
   src/volcanibot_controller/trajectory_publisher.py
+  src/volcanibot_controller/keyboard_teleop.py
   DESTINATION lib/${PROJECT_NAME}
 )
